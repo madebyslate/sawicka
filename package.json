@@ -1,0 +1,16 @@
+{
+  "name": "sawicka-grzyb",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sawicka Grzyby — Księgowość i Podatki. Monorepo: payload/ (CMS) + website/ (Astro).",
+  "scripts": {
+    "dev:payload": "cd payload && docker compose up -d",
+    "dev:website": "cd website && pnpm dev",
+    "build:payload": "cd payload && pnpm build",
+    "build:website": "cd website && pnpm build",
+    "generate:types": "cd payload && pnpm generate:types",
+    "check:website": "cd website && pnpm check",
+    "seed:testimonials": "cd payload && pnpm exec tsx src/seed/seedTestimonials.ts",
+    "storybook": "cd website && pnpm storybook"
+  }
+}

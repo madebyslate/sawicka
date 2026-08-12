@@ -1,0 +1,46 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/manrope";
+
+
+@theme {
+  /* --- Kolory --- */
+  --color-navy: #030f22; /* Dark Navy — tekst, tło ciemnych sekcji (np. Hero) */
+  --color-gold: #f6e4a9; /* Soft Gold — główne CTA na ciemnym tle */
+  --color-bronze: #946625; /* Bronze — CTA/akcenty na jasnym (cream) tle */
+  --color-cream: #efe7d8; /* Cream — tło jasnych sekcji */
+  --color-card: #ece2d0; /* powierzchnia karty na tle cream (subtelnie ciemniejsza, celowo inny odcień) */
+  --color-scrim: #190a06; /* przyciemnienie zdjęć pod białym tekstem (np. CTA "Ready to Work?") */
+
+  /* --- Fonty --- */
+  --font-serif: 'Times New Roman', Times, serif; /* nagłówki H1-H3 */
+  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif; /* treść, przyciski */
+  --font-label: 'Manrope Variable', 'Manrope', system-ui, sans-serif; /* Section Label */
+
+  --text-display: 4.5rem; /* 72px — H1 */
+  --text-display--line-height: 1.2;
+  --tracking-display: -0.04em;
+  --text-h2: 3rem; /* 48px */
+  --text-h2--line-height: 1.2;
+  --tracking-h2: -0.04em;
+  --text-h3: 1.75rem; /* 28px */
+  --text-h3--line-height: 1.2;
+  --tracking-h3: -0.04em;
+  --text-button: 1.125rem; /* 18px */
+  --tracking-button: -0.04em;
+  --text-tagline: 0.875rem; /* 14px — badge/tagline (Inter) */
+  --tracking-tagline: -0.04em;
+  --text-body: 1rem; /* 16px — treść */
+  --text-body--line-height: 1.6;
+
+  /* --- Border radius --- */
+  --radius-pill: 100px; /* przyciski, badge'e — wizualnie = rounded-full */
+  --radius-card: 16px; /* karty treści (np. pain-point cards) */
+  --radius-icon: 12px; /* kwadratowe odznaki ikon */
+
+  /* --- Layout --- */
+  --container-page: 1440px; /* szerokość treści w Figmie: 1440px - 60px marginesu z każdej strony */
+
+  --breakpoint-desktop: 90rem; /* 1440px */
+  --breakpoint-footer-row: 77.4375rem; /* 1239px */
+}

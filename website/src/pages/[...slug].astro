@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/sections/Header/Header.astro';
+import Footer from '../components/sections/Footer/Footer.astro';
+import RenderBlocks from '../components/blocks/RenderBlocks.astro';
+import { getSiteSettings } from '../lib/payload/site-settings';
+import { getAllPages, getPageBySlug } from '../lib/payload/pages';
+
+export async function getStaticPaths() {
+  const pages = await getAllPages();
+  return pages.map((page) => ({
+    params: { slug: page.slug === '/' ? undefined : page.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const page = await getPageBySlug(slug ?? '/');
+
+if (!page) {
+  throw new Error(`Nie znaleziono strony o slugu "${slug ?? '/'}" (getPageBySlug zwrócił null).`);
+}
+
+const siteSettings = await getSiteSettings();
+const pageTitle = page.title || siteSettings.siteName;
+const pageDescription = page.metaDescription || siteSettings.tagline || siteSettings.siteName;
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl={page.canonicalUrl}
+  ogImage={page.ogImage}
+>
+  <Header slot="header" />
+  {page.content && <RenderBlocks blocks={page.content} />}
+  <Footer slot="footer" />
+</Layout>

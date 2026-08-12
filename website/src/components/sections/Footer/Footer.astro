@@ -1,0 +1,114 @@
+---
+import Container from '../../ui/Container/Container.astro';
+import Image from '../../ui/Image/Image.astro';
+import ContactItem from './ContactItem.astro';
+import FooterLinkColumn from './FooterLinkColumn.astro';
+import logo from '../../../assets/footer/logo.png';
+import Wordmark from '../../../assets/footer/wordmark-sawicka-grzyb.svg';
+import { getFooter } from '../../../lib/payload/footer';
+import { getMenuItems } from '../../../lib/payload/menu';
+import { resolveLinkHref } from '../../../lib/payload/link';
+
+const footer = await getFooter();
+const { contact } = footer;
+const linkColumns = footer.linkColumns ?? [];
+const legalLinks = getMenuItems(footer.legalMenu);
+const addressLines = contact?.address?.value?.split('\n') ?? [];
+const hoursLines = contact?.hours?.value?.split('\n') ?? [];
+
+const columnWidthClasses = [
+  'footer-row:w-28 footer-row:whitespace-nowrap',
+  'footer-row:w-40',
+  'footer-row:w-27 footer-row:whitespace-nowrap',
+];
+---
+
+<footer class="bg-navy py-16 sm:py-20 lg:pt-20 lg:pb-6">
+  <Container>
+    <div class="flex flex-col">
+      <div class="flex flex-col gap-25 pb-20 sm:pb-26 footer-row:flex-row footer-row:items-stretch footer-row:gap-0 footer-row:pb-36">
+        <div class="grid max-w-142 grid-cols-1 gap-20 sm:grid-cols-2 footer-row:gap-x-20 footer-row:gap-y-25 footer-row:w-142 footer-row:shrink-0">
+          <ContactItem label={contact?.address?.label ?? ''}>
+            {addressLines.map((line, i) => (
+              <>
+                {i > 0 && <br />}
+                {line}
+              </>
+            ))}
+          </ContactItem>
+          <ContactItem label={contact?.phone?.label ?? ''}>{contact?.phone?.value}</ContactItem>
+          <ContactItem label={contact?.email?.label ?? ''}>{contact?.email?.value}</ContactItem>
+          <ContactItem label={contact?.hours?.label ?? ''}>
+            {hoursLines.map((line, i) => (
+              <>
+                {i > 0 && <br />}
+                {line}
+              </>
+            ))}
+          </ContactItem>
+        </div>
+
+        {/*
+          Próg 1239px = 568 (lewa kolumna) + 32+1+32 (divider przy MINIMALNYCH
+          marginesach) + 542 (prawa kolumna) + 64 (padding Containera, lg:px-8
+          obowiązuje aż do desktop:=1440) — poniżej tego nawet przy minimalnych
+          marginesach treść się nie mieści, więc dopiero tam ma sens
+          rozpoczynać układ side-by-side. Marginesy skalują się płynnie przez
+          clamp() od 32px (przy 1239px) do docelowych 89px/119px (przy 1440px,
+          patrz --breakpoint-desktop w global.css) — stąd surowy `style`
+          zamiast klas Tailwind (ten sam wzorzec co radial-gradient w Hero.astro).
+        */}
+        <div
+          class="hidden w-px shrink-0 self-stretch bg-white/12 footer-row:block"
+          style="margin-left: clamp(32px, 28.36vw - 319.4px, 89px); margin-right: clamp(32px, 43.28vw - 504.28px, 119px);"
+        ></div>
+
+        <div class="flex flex-wrap gap-16 sm:gap-20 footer-row:flex-nowrap footer-row:gap-20.25">
+          {
+            linkColumns.map((column, i) => (
+              <FooterLinkColumn
+                label={column.title}
+                links={getMenuItems(column.menu)}
+                class={columnWidthClasses[i]}
+              />
+            ))
+          }
+        </div>
+      </div>
+
+      <Wordmark
+        width={1317}
+        height={216}
+        role="img"
+        aria-label="Sawicka Grzyb"
+        class="h-auto w-full pt-12 pb-4 sm:pt-16 sm:pb-5 lg:pt-20 lg:pb-6"
+      />
+
+      <div
+        class="grid grid-cols-1 items-center gap-6 border-t border-white/12 pt-6 sm:grid-cols-[1fr_auto_1fr]"
+      >
+        <Image
+          src={logo}
+          alt="Sawicka Grzyb"
+          height={36}
+          class="h-9 w-auto justify-self-center sm:justify-self-start"
+        />
+        <p class="text-center text-tagline leading-[normal] font-medium text-white/80">
+          © {new Date().getFullYear()} {footer.copyrightText}
+        </p>
+        <div class="flex justify-center gap-6 sm:justify-self-end">
+          {
+            legalLinks.map((link) => (
+              <a
+                href={resolveLinkHref(link)}
+                class="text-tagline leading-[normal] font-medium text-white/80 hover:opacity-80"
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </Container>
+</footer>

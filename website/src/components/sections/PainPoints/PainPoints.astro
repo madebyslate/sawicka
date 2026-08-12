@@ -1,0 +1,111 @@
+---
+import type { Media } from '@payload-types';
+import Container from '../../ui/Container/Container.astro';
+import Section from '../../ui/Section/Section.astro';
+import Heading from '../../ui/Heading/Heading.astro';
+import Button from '../../ui/Button/Button.astro';
+import IconFeatureCard from '../../ui/IconFeatureCard/IconFeatureCard.astro';
+import { resolveMediaUrl } from '../../../lib/payload/media';
+import { resolveLinkHref, type LinkLike } from '../../../lib/payload/link';
+
+interface PainPoint {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  tagline?: string | null;
+  heading: string;
+  description?: string | null;
+  image?: number | Media | null;
+  painPoints?: PainPoint[] | null;
+  closingText?: string | null;
+  button?: LinkLike | null;
+}
+
+const { tagline, heading, description, image, painPoints, closingText, button } = Astro.props;
+
+const imageUrl = resolveMediaUrl(image);
+const imageAlt = image && typeof image === 'object' ? image.alt : '';
+const buttonHref = resolveLinkHref(button);
+
+const leftColumn = (painPoints ?? []).filter((_, index) => index % 2 === 0);
+const rightColumn = (painPoints ?? []).filter((_, index) => index % 2 === 1);
+---
+
+<Section class="bg-cream">
+  <Container>
+    <div class="flex flex-col items-center gap-20">
+      <div class="flex w-full flex-col items-start gap-20">
+        <div class="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,429px)_minmax(0,668px)] lg:gap-x-4">
+          {tagline && (
+            <p class="text-[14px] font-medium uppercase text-[#030F22] opacity-80"
+               style="font-family: Manrope, sans-serif; line-height: normal;">
+              {tagline}
+            </p>
+          )}
+          <div>
+            <Heading
+              as="h2"
+              class="text-[#030F22] font-serif text-[48px] leading-[57.6px] tracking-[-1.92px] max-w-[668px]"
+              style="font-family: 'Times New Roman', serif;"
+            >
+              {heading}
+            </Heading>
+            {description && (
+              <p class="mt-6 max-w-[875px] text-[16px] leading-[160%] text-[#030F22] opacity-80"
+                 style="font-family: Inter, sans-serif;">
+                {description}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div class="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,429px)_minmax(0,430px)_minmax(0,429px)]">
+          <div class="flex h-full flex-col gap-4">
+            {leftColumn.map((item) => (
+              <div class="flex-1 min-h-0">
+                <IconFeatureCard class="h-full" icon={item.icon} title={item.title}>
+                  {item.description}
+                </IconFeatureCard>
+              </div>
+            ))}
+          </div>
+          {imageUrl && (
+            <img src={imageUrl} alt={imageAlt} loading="lazy" class="h-full w-full rounded-card object-cover" />
+          )}
+          <div class="flex h-full flex-col gap-4">
+            {rightColumn.map((item) => (
+              <div class="flex-1 min-h-0">
+                <IconFeatureCard class="h-full" icon={item.icon} title={item.title}>
+                  {item.description}
+                </IconFeatureCard>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {(closingText || button) && (
+        <div class="flex w-full max-w-[589px] flex-col items-center gap-6 text-center">
+          {closingText && (
+            <p class="text-[16px] leading-[160%] text-[#030F22] opacity-80"
+               style="font-family: Inter, sans-serif;">
+              {closingText}
+            </p>
+          )}
+          {button && (
+            <Button
+              variant="accent"
+              href={buttonHref}
+              class="gap-[10px] px-8 py-4 text-[18px] tracking-[-0.72px]"
+            >
+              {button.label}
+            </Button>
+          )}
+        </div>
+      )}
+    </div>
+  </Container>
+</Section>

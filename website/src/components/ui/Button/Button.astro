@@ -1,0 +1,43 @@
+---
+type BaseProps = {
+  variant?: 'primary' | 'accent' | 'outline';
+  size?: 'md' | 'sm';
+  class?: string;
+};
+
+type LinkProps = BaseProps & { href: string; type?: never };
+type ButtonProps = BaseProps & { href?: never; type?: 'button' | 'submit' };
+
+type Props = LinkProps | ButtonProps;
+
+const { href, variant = 'primary', size = 'md', type = 'button', class: className, ...rest } = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2.5 rounded-pill font-sans font-medium ' +
+  'transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
+
+const sizes = {
+  md: 'px-8 py-4 text-button tracking-button',
+  sm: 'px-6 py-3 text-body leading-[1.2] tracking-tagline',
+};
+
+const variants = {
+  primary: 'bg-gold text-navy hover:bg-gold/90 focus-visible:outline-gold',
+  accent: 'bg-bronze text-white hover:bg-bronze/90 focus-visible:outline-bronze',
+  outline: 'border-[0.5px] border-white text-white hover:bg-white/10 focus-visible:outline-white',
+};
+
+const classes = [base, sizes[size], variants[variant], className].filter(Boolean).join(' ');
+---
+
+{
+  href ? (
+    <a href={href} class={classes} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class={classes} {...rest}>
+      <slot />
+    </button>
+  )
+}

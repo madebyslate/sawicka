@@ -1,0 +1,45 @@
+---
+import type { Media } from '@payload-types';
+import '../styles/global.css';
+import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import manropeWoff2 from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
+import SEO from './SEO.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalUrl?: string | null;
+  ogImage?: number | Media | null;
+  ogType?: 'website' | 'article';
+}
+
+const { title, description, canonicalUrl, ogImage, ogType } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <link rel="preload" as="font" type="font/woff2" href={interWoff2} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={manropeWoff2} crossorigin />
+
+    <SEO
+      title={title}
+      description={description}
+      canonicalUrl={canonicalUrl}
+      ogImage={ogImage}
+      ogType={ogType}
+    />
+  </head>
+  <body class="min-h-screen bg-white font-sans text-navy antialiased has-[header details[open]]:overflow-hidden">
+    <slot name="header" />
+    <main>
+      <slot />
+    </main>
+    <slot name="footer" />
+  </body>
+</html>

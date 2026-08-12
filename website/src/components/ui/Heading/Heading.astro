@@ -1,0 +1,18 @@
+---
+interface Props {
+  as?: 'h1' | 'h2' | 'h3';
+  class?: string;
+}
+
+const { as: Tag = 'h2', class: className, ...rest } = Astro.props;
+
+const sizes = {
+  h1: 'text-display tracking-display',
+  h2: 'text-h2 tracking-h2',
+  h3: 'text-h3 tracking-h3',
+} as const;
+---
+
+<Tag class:list={['font-serif', sizes[Tag as keyof typeof sizes], className]} {...rest}>
+  <slot />
+</Tag>

@@ -1,0 +1,94 @@
+---
+import type { Media } from '@payload-types';
+import { getSiteSettings } from '../lib/payload/site-settings';
+import { resolveMediaUrl } from '../lib/payload/media';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalUrl?: string | null;
+  ogImage?: number | Media | null;
+  ogType?: 'website' | 'article';
+}
+
+const { title, description, canonicalUrl, ogImage, ogType = 'website' } = Astro.props;
+
+const canonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = resolveMediaUrl(ogImage);
+
+const siteSettings = await getSiteSettings();
+const organization = siteSettings.organization;
+
+const logoUrl = resolveMediaUrl(organization?.logo);
+const sameAs = (organization?.socialProfiles ?? []).map((profile) => profile.url).filter(Boolean);
+
+const address = organization?.address;
+const hasAddress = Boolean(
+  address?.streetAddress || address?.addressLocality || address?.postalCode,
+);
+const addressSchema = hasAddress
+  ? {
+      '@type': 'PostalAddress',
+      ...(address?.streetAddress ? { streetAddress: address.streetAddress } : {}),
+      ...(address?.addressLocality ? { addressLocality: address.addressLocality } : {}),
+      ...(address?.addressRegion ? { addressRegion: address.addressRegion } : {}),
+      ...(address?.postalCode ? { postalCode: address.postalCode } : {}),
+      ...(address?.addressCountry ? { addressCountry: address.addressCountry } : {}),
+    }
+  : undefined;
+
+const alternateNames = (organization?.alternateName ?? []).map((item) => item.value).filter(Boolean);
+const founders = (organization?.founders ?? [])
+  .filter((founder) => founder.givenName || founder.familyName)
+  .map((founder) => ({
+    '@type': 'Person',
+    ...(founder.givenName ? { givenName: founder.givenName } : {}),
+    ...(founder.familyName ? { familyName: founder.familyName } : {}),
+  }));
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${Astro.site}#organization`,
+  name: siteSettings.siteName,
+  ...(organization?.legalName ? { legalName: organization.legalName } : {}),
+  ...(alternateNames.length > 0 ? { alternateName: alternateNames } : {}),
+  ...(siteSettings.tagline ? { slogan: siteSettings.tagline, description: siteSettings.tagline } : {}),
+  url: Astro.site?.toString(),
+  ...(logoUrl ? { logo: logoUrl } : {}),
+  ...(addressSchema ? { address: addressSchema } : {}),
+  ...(organization?.phone ? { telephone: organization.phone } : {}),
+  ...(organization?.email ? { email: organization.email } : {}),
+  ...(organization?.taxId ? { taxID: organization.taxId } : {}),
+  ...(organization?.registrationNumber
+    ? {
+        identifier: {
+          '@type': 'PropertyValue',
+          name: 'REGON/KRS',
+          value: organization.registrationNumber,
+        },
+      }
+    : {}),
+  ...(organization?.foundingDate ? { foundingDate: organization.foundingDate.slice(0, 10) } : {}),
+  ...(founders.length > 0 ? { founder: founders } : {}),
+  ...(sameAs.length > 0 ? { sameAs } : {}),
+};
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={siteSettings.siteName} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+{ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+
+<meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(organizationSchema)} />

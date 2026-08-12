@@ -1,0 +1,185 @@
+---
+import type { Media, Testimonial } from '@payload-types';
+import Container from '../../ui/Container/Container.astro';
+import Section from '../../ui/Section/Section.astro';
+import SectionLabel from '../../ui/SectionLabel/SectionLabel.astro';
+import Heading from '../../ui/Heading/Heading.astro';
+import Icon from '../../ui/Icon/Icon.astro';
+import { getLatestTestimonials } from '../../../lib/payload/testimonials';
+import { resolveMediaUrl } from '../../../lib/payload/media';
+
+interface Props {
+  tagline?: string | null;
+  heading: string;
+  testimonialsMode?: 'latest' | 'manual' | null;
+  manualTestimonials?: (number | Testimonial)[] | null;
+}
+
+const { tagline, heading, testimonialsMode, manualTestimonials } = Astro.props;
+
+const testimonials: Testimonial[] =
+  testimonialsMode === 'manual'
+    ? (manualTestimonials ?? []).filter((item): item is Testimonial => typeof item === 'object')
+    : await getLatestTestimonials(3);
+
+const hasMultiple = testimonials.length > 1;
+---
+
+<Section class="bg-cream">
+  <Container>
+    <div class="flex w-full flex-col items-start gap-20">
+      <div class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-start lg:gap-80.25">
+        {tagline && <SectionLabel class="shrink-0">{tagline}</SectionLabel>}
+        <Heading as="h2" class="lg:max-w-2xl">
+          {heading}
+        </Heading>
+      </div>
+
+      {
+        testimonials.length > 0 && (
+          <div
+            data-testimonials-root
+            class="flex w-full flex-col items-center gap-8 lg:flex-row lg:items-end lg:justify-between"
+          >
+            {hasMultiple && (
+              <div class="flex items-center gap-4">
+                <button
+                  type="button"
+                  data-prev
+                  aria-label="Poprzednia opinia"
+                  disabled
+                  class="transition disabled:cursor-default disabled:opacity-40"
+                >
+                  <Icon src="/icons/arrow-prev.svg" alt="" size={48} class="rotate-180" />
+                </button>
+                <button
+                  type="button"
+                  data-next
+                  aria-label="Następna opinia"
+                  class="transition disabled:cursor-default disabled:opacity-40"
+                >
+                  <Icon src="/icons/arrow-next.svg" alt="" size={48} />
+                </button>
+              </div>
+            )}
+
+            <div class="w-full overflow-hidden lg:w-274">
+              <div
+                data-testimonials-track
+                class="flex motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out motion-reduce:transition-none"
+              >
+                {testimonials.map((testimonial) => {
+                  const photoUrl = resolveMediaUrl(testimonial.photo as number | Media | null | undefined);
+
+                  return (
+                    <article
+                      data-slide
+                      class="flex w-full shrink-0 flex-col items-center gap-4 lg:flex-row lg:items-stretch"
+                    >
+                      {photoUrl && (
+                        <img
+                          src={photoUrl}
+                          alt={testimonial.author}
+                          loading="lazy"
+                          class="h-90 w-full rounded-card object-cover lg:h-112 lg:w-107"
+                        />
+                      )}
+                      <div class="flex w-full flex-col gap-15 rounded-card border-2 border-white bg-card p-8 lg:w-163">
+                        <div class="flex flex-col gap-6">
+                          <span class="text-6xl leading-none text-navy" aria-hidden="true">
+                            &ldquo;
+                          </span>
+                          <p class="font-serif text-[2rem] leading-[1.2] tracking-[-0.04em] text-navy">
+                            {testimonial.quote}
+                          </p>
+                        </div>
+                        <div class="flex flex-col gap-6 border-t border-navy/10 pt-6">
+                          <div class="flex items-center justify-between gap-4">
+                            <div class="flex flex-col gap-1.5">
+                              <p class="font-serif text-2xl tracking-[-0.04em] text-navy">{testimonial.author}</p>
+                              {testimonial.company && <p class="text-body text-navy/80">{testimonial.company}</p>}
+                            </div>
+                            <div class="flex shrink-0 items-center gap-1 rounded-pill border-2 border-white px-4 py-3">
+                              <Icon src="/icons/star.svg" alt="" size={16} />
+                              <span class="text-body tracking-tagline text-navy/80">
+                                {testimonial.rating ?? 5} / 5
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+              <p class="sr-only" data-testimonials-status aria-live="polite">
+                {`Opinia 1 z ${testimonials.length}.`}
+              </p>
+            </div>
+
+            {
+              hasMultiple && (
+                // is:inline — CELOWO: zwykły (przetwarzany) <script> jest przez Astro
+                // hoistowany poza swoją oryginalną pozycję w DOM (zweryfikowane w zbudowanym
+                // HTML-u), więc document.currentScript.closest('[data-testimonials-root]')
+                // nigdy nie znajdował elementu i slider był martwy. is:inline zostawia go
+                // dokładnie tu, gdzie jest w kodzie — wewnątrz [data-testimonials-root].
+                // Bez transpilacji, więc celowo zwykły JS (bez adnotacji typów TS).
+                <script is:inline>
+                  (() => {
+                    const script = document.currentScript;
+                    if (!script) return;
+
+                    const root = script.closest('[data-testimonials-root]');
+                    if (!root) return;
+
+                    const track = root.querySelector('[data-testimonials-track]');
+                    const prevButton = root.querySelector('button[data-prev]');
+                    const nextButton = root.querySelector('button[data-next]');
+                    const status = root.querySelector('[data-testimonials-status]');
+                    const slides = Array.from(root.querySelectorAll('[data-slide]'));
+
+                    if (!track || !prevButton || !nextButton || !status || slides.length === 0) {
+                      return;
+                    }
+
+                    let activeIndex = 0;
+
+                    const update = () => {
+                      track.style.transform = `translateX(-${activeIndex * 100}%)`;
+                      prevButton.disabled = activeIndex === 0;
+                      nextButton.disabled = activeIndex === slides.length - 1;
+                      slides.forEach((slide, index) => {
+                        slide.setAttribute('aria-hidden', String(index !== activeIndex));
+                      });
+                      status.textContent = `Opinia ${activeIndex + 1} z ${slides.length}.`;
+                    };
+
+                    const move = (delta) => {
+                      activeIndex = Math.min(Math.max(activeIndex + delta, 0), slides.length - 1);
+                      update();
+                    };
+
+                    prevButton.addEventListener('click', () => move(-1));
+                    nextButton.addEventListener('click', () => move(1));
+                    root.addEventListener('keydown', (event) => {
+                      if (event.key === 'ArrowLeft') {
+                        event.preventDefault();
+                        move(-1);
+                      } else if (event.key === 'ArrowRight') {
+                        event.preventDefault();
+                        move(1);
+                      }
+                    });
+
+                    update();
+                  })();
+                </script>
+              )
+            }
+          </div>
+        )
+      }
+    </div>
+  </Container>
+</Section>

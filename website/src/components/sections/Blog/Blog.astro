@@ -1,0 +1,44 @@
+---
+import type { Post } from '@payload-types';
+import Container from '../../ui/Container/Container.astro';
+import Section from '../../ui/Section/Section.astro';
+import SectionLabel from '../../ui/SectionLabel/SectionLabel.astro';
+import Heading from '../../ui/Heading/Heading.astro';
+import BlogCard from '../../ui/BlogCard/BlogCard.astro';
+import { getLatestPosts } from '../../../lib/payload/posts';
+
+interface Props {
+  tagline?: string | null;
+  heading: string;
+  description?: string | null;
+  postsMode?: 'latest' | 'manual' | null;
+  manualPosts?: (number | Post)[] | null;
+}
+
+const { tagline, heading, description, postsMode, manualPosts } = Astro.props;
+
+const posts: Post[] =
+  postsMode === 'manual'
+    ? (manualPosts ?? []).filter((post): post is Post => typeof post === 'object')
+    : await getLatestPosts(3);
+---
+
+<Section class="bg-cream">
+  <Container>
+    <div class="flex w-full flex-col items-start gap-20">
+      <div class="flex w-full flex-col items-start gap-4">
+        {tagline && <SectionLabel>{tagline}</SectionLabel>}
+        <div class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <Heading as="h2" class="font-normal lg:max-w-xl">
+            {heading}
+          </Heading>
+          {description && <p class="text-body text-navy/80 lg:max-w-md">{description}</p>}
+        </div>
+      </div>
+
+      <div class="grid w-full grid-cols-1 gap-4 lg:grid-cols-3">
+        {posts.map((post) => <BlogCard post={post} />)}
+      </div>
+    </div>
+  </Container>
+</Section>

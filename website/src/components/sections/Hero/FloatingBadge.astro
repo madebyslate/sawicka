@@ -1,0 +1,21 @@
+---
+interface Props {
+  label: string;
+  class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<div class:list={['absolute hidden h-16 w-fit lg:block', className]}>
+  <div class="absolute left-0 top-0 inline-flex">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32" class="h-8 w-8">
+      <path fill="#fff" stroke="#030f22" stroke-width="1.5" d="M10.367 6.85a.93.93 0 0 1 1.068.165h.002l11.432 10.421c.368.336.461.831.317 1.275-.145.442-.49.737-.932.756l-5.188.22c-.778.033-1.494.4-1.996.994l-.002.002-3.53 4.199h-.002c-.321.382-.746.442-1.107.295-.368-.15-.679-.522-.679-1.077V7.9c0-.517.277-.883.617-1.05Z"/>
+    </svg>
+  </div>
+  <span
+    class="absolute top-8 left-3 inline-flex items-center justify-center gap-[10px] whitespace-nowrap rounded-full border-[0.5px] border-[rgba(255,255,255,0.32)] bg-[rgba(255,255,255,0.06)] px-[12px] py-[7px] text-[16px] leading-normal tracking-[-0.64px] text-white shadow-[inset_-4px_-6px_32px_0_rgba(255,255,255,0.02)] backdrop-blur-[6px]"
+  >
+    {label}
+  </span>
+</div>

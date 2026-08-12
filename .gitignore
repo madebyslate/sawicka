@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+**/node_modules
+.pnpm-store/
+**/.pnpm-store
+
+# build output / caches
+**/.next
+**/dist
+**/storybook-static
+**/.astro
+**/build
+**/out
+**/*.tsbuildinfo
+
+# env files (sekrety — payload/.env i website/.env mają własne .gitignore,
+# to jest dodatkowe zabezpieczenie na wypadek innej lokalizacji)
+**/.env
+**/.env.*
+**/*.env
+!**/.env.example
+
+# logs
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# OS / editor
+**/.DS_Store
+**/.idea
+.claude/
+
+# Payload uploads (media) — nie commitujemy binariów wgranych przez adminów
+payload/media

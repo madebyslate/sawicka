@@ -1,0 +1,17 @@
+---
+interface Props {
+  tone?: 'dark' | 'light';
+  class?: string;
+}
+
+const { tone = 'dark', class: className } = Astro.props;
+
+const tones = {
+  dark: 'text-navy/80',
+  light: 'text-white/80',
+} as const;
+---
+
+<p class:list={['font-label text-tagline font-medium uppercase', tones[tone], className]}>
+  <span aria-hidden="true">[ </span><slot /><span aria-hidden="true"> ]</span>
+</p>

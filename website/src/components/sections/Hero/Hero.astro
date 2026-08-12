@@ -1,0 +1,161 @@
+---
+import type { Media } from '@payload-types';
+import Container from '../../ui/Container/Container.astro';
+import Heading from '../../ui/Heading/Heading.astro';
+import Button from '../../ui/Button/Button.astro';
+import Image from '../../ui/Image/Image.astro';
+import FloatingBadge from './FloatingBadge.astro';
+import noiseTexture from '../../../assets/sections/hero/noise-texture.png';
+import { resolveLinkHref, type LinkLike } from '../../../lib/payload/link';
+import { resolveMediaUrl } from '../../../lib/payload/media';
+
+interface FloatingBadgeData {
+  label: string;
+}
+
+interface Props {
+  tagline?: string | null;
+  heading: string;
+  description?: string | null;
+  portrait?: number | Media | null;
+  avatarsImage?: number | Media | null;
+  trustText?: string | null;
+  trustHighlight?: string | null;
+  primaryButton: LinkLike;
+  secondaryButton: LinkLike;
+  floatingBadges?: FloatingBadgeData[] | null;
+}
+
+const {
+  tagline,
+  heading,
+  description,
+  portrait,
+  avatarsImage,
+  trustText,
+  trustHighlight,
+  primaryButton,
+  secondaryButton,
+  floatingBadges,
+} = Astro.props;
+
+const portraitUrl = resolveMediaUrl(portrait);
+const portraitAlt = portrait && typeof portrait === 'object' ? portrait.alt : '';
+const avatarsImageUrl = resolveMediaUrl(avatarsImage);
+const primaryHref = resolveLinkHref(primaryButton);
+const secondaryHref = resolveLinkHref(secondaryButton);
+
+const badgePositionClasses = [
+  'top-56 left-[75%]',
+  'top-139 left-[calc(75%+37px)]',
+  'top-180 left-[calc(50%+90px)]',
+];
+
+const trustParts =
+  trustText && trustHighlight && trustText.includes(trustHighlight)
+    ? trustText.split(trustHighlight)
+    : null;
+---
+
+<section
+  class="relative isolate min-h-230 overflow-hidden"
+  style="background: linear-gradient(180deg, #030F22 0%, #14243D 100%);"
+>
+  {
+    portraitUrl && (
+      <img
+        src={portraitUrl}
+        alt={portraitAlt}
+        class="absolute inset-y-0 right-0 -z-20 h-full w-auto max-w-[70%] object-cover"
+      />
+    )
+  }
+
+  <div
+    class="absolute inset-0 z-[-15] mix-blend-lighten opacity-40"
+    style="background: radial-gradient(ellipse 900px 600px at 40% 100%, #8D96A5, transparent 65%)"
+  >
+  </div>
+
+  <Image
+    src={noiseTexture}
+    alt=""
+    width={480}
+    height={307}
+    loading="eager"
+    class="absolute inset-0 -z-15 h-full w-full object-cover opacity-[0.32] mix-blend-soft-light"
+  />
+
+  <div class="absolute inset-0 -z-10 bg-linear-to-r from-navy from-48% to-transparent to-58%"></div>
+  <div class="absolute inset-x-0 bottom-0 -z-10 h-45 bg-linear-to-b from-navy/0 to-navy"></div>
+
+  {
+    (floatingBadges ?? []).slice(0, 3).map((badge, index) => (
+      <FloatingBadge label={badge.label} class={badgePositionClasses[index]} />
+    ))
+  }
+
+  <Container class="relative z-10 flex min-h-230 flex-col pt-[185px] pb-[88px]">
+    <div class="grid max-w-2xl flex-1 grid-rows-[1fr_auto_1fr] items-start">
+      <div class="row-start-1 flex flex-col items-start justify-self-start gap-2 self-start">
+        {tagline && (
+          <span
+            class="inline-flex items-center rounded-pill bg-linear-to-r from-gold to-bronze px-3 py-1.5 text-tagline tracking-tagline font-medium text-navy"
+          >
+            {tagline}
+          </span>
+        )}
+        <Heading as="h1" class="text-white">{heading}</Heading>
+      </div>
+
+      {(avatarsImageUrl || trustText) && (
+        <div class="row-start-2 flex items-center justify-self-start gap-4 self-center">
+          {avatarsImageUrl && <img src={avatarsImageUrl} alt="" class="h-10.25 w-auto" />}
+          {trustText && (
+            <p class="max-w-64.75 text-tagline leading-[1.4] tracking-tagline text-white/80">
+              {trustParts ? (
+                <>
+                  {trustParts[0]}<span class="font-semibold text-white">{trustHighlight}</span>{trustParts[1]}
+                </>
+              ) : (
+                trustText
+              )}
+            </p>
+          )}
+        </div>
+      )}
+
+      <div class="row-start-3 flex flex-col justify-end gap-8 self-end">
+        {description && <p class="text-body text-white/80">{description}</p>}
+
+        <div class="flex items-center gap-4">
+          <Button variant="primary" href={primaryHref}>
+            {primaryButton.label}
+          </Button>
+          <Button variant="outline" href={secondaryHref}>
+            {secondaryButton.label}
+          </Button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-auto flex justify-end">
+      <div class="hidden items-center gap-1 text-[14px] uppercase text-white opacity-80 lg:flex">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          fill="none"
+          viewBox="0 0 14 14"
+          class="h-3.5 w-3.5 flex-none"
+        >
+          <g stroke="#fff" stroke-linecap="round" stroke-linejoin="round" opacity=".8">
+            <path d="M7 12.834a4.384 4.384 0 0 0 4.375-4.376V5.542A4.384 4.384 0 0 0 7 1.167a4.384 4.384 0 0 0-4.375 4.375v2.916A4.384 4.384 0 0 0 7 12.834" />
+            <path d="M7 6.417a.874.874 0 0 1-.875-.875V4.375a.874.874 0 1 1 1.75 0v1.167A.88.88 0 0 1 7 6.417M7 3.5V1.167" />
+          </g>
+        </svg>
+        Scroll Down
+      </div>
+    </div>
+  </Container>
+</section>

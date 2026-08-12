@@ -1,0 +1,17 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "paths": {
+      "@payload-types": ["../payload/src/payload-types.ts"],
+      "@components/*": ["src/components/*"],
+      "@sections/*": ["src/components/sections/*"],
+      "@ui/*": ["src/components/ui/*"],
+      "@seo/*": ["src/components/seo/*"],
+      "@data/*": ["src/data/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@styles/*": ["src/styles/*"]
+    }
+  }
+}

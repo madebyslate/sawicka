@@ -1,0 +1,101 @@
+---
+import type { Media } from '@payload-types';
+import Heading from '../../ui/Heading/Heading.astro';
+import Button from '../../ui/Button/Button.astro';
+import { resolveMediaUrl } from '../../../lib/payload/media';
+import { resolveLinkHref, type LinkLike } from '../../../lib/payload/link';
+
+interface Props {
+  number: string;
+  title: string;
+  description: string;
+  areas?: string[];
+  image?: number | Media | null;
+  button?: LinkLike | null;
+  open?: boolean;
+  class?: string;
+}
+
+const { number, title, description, areas = [], image, button, open = true, class: className } = Astro.props;
+
+const imageUrl = resolveMediaUrl(image);
+const imageAlt = image && typeof image === 'object' ? image.alt : title;
+const buttonHref = resolveLinkHref(button);
+---
+
+<details class:list={['group w-full border-t border-[rgba(255,255,255,0.16)] pt-[80px]', className]} open={open}>
+  <summary class="list-none cursor-pointer [&::-webkit-details-marker]:hidden">
+    <div class="flex w-full items-center gap-6">
+      <div class="flex flex-1 flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,429px)_minmax(0,1fr)] lg:items-start lg:gap-x-4">
+        <div class="pt-3.5">
+          <p class="text-[14px] font-medium uppercase text-white opacity-80"
+             style="font-family: Manrope, sans-serif; line-height: normal;">
+            [ {number} ]
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-4">
+          <Heading
+            as="h3"
+            class="text-white font-serif text-[32px] leading-[38.4px] tracking-[-1.28px] font-normal max-w-135.25"
+          >
+            {title}
+          </Heading>
+          <p class="text-[16px] leading-[160%] text-white opacity-80 max-w-135.25"
+             style="font-family: Inter, sans-serif;">
+            {description}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex shrink-0 items-center justify-center">
+        <span class="grid h-[48px] w-[48px] place-items-center rounded-full border-[1.6px] border-white text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="block group-open:hidden">
+            <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m18 14.167-6-7-6 7" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" class="hidden group-open:block">
+            <path d="M6 9.8335L12 16.8335L18 9.8335" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </summary>
+
+  <div class="mt-[40px] grid w-full grid-cols-1 gap-6 lg:grid-cols-[minmax(0,429px)_minmax(0,1fr)] lg:gap-x-4">
+    <div class="flex h-full flex-col justify-end gap-[24px]">
+      <div class="flex flex-col gap-[24px]">
+        <p class="text-[18px] font-semibold tracking-[-0.72px] text-white"
+           style="font-family: Inter, sans-serif; line-height: normal;">
+          Areas of Support
+        </p>
+        <ul class="flex flex-col gap-4">
+          {
+            areas.map((area) => (
+              <li class="flex items-center gap-2">
+                <span class="h-[10px] w-[10px] rounded-full bg-[#F6E4A9]" />
+                <span class="text-[16px] leading-normal text-white opacity-80"
+                      style="font-family: Inter, sans-serif;">
+                  {area}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      {button && (
+        <div>
+          <Button variant="primary" href={buttonHref}>
+            {button.label}
+          </Button>
+        </div>
+      )}
+    </div>
+
+    {imageUrl && (
+      <div class="h-full w-full overflow-hidden rounded-card">
+        <img src={imageUrl} alt={imageAlt} loading="lazy" class="block h-full w-full object-cover" />
+      </div>
+    )}
+  </div>
+</details>

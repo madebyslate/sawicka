@@ -1,0 +1,11 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<p class:list={['text-body tracking-tagline leading-[normal] text-white/60 uppercase', className]}>
+  <slot />
+</p>

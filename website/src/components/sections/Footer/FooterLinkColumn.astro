@@ -1,0 +1,30 @@
+---
+import FooterLabel from './FooterLabel.astro';
+import { resolveLinkHref, type LinkLike } from '../../../lib/payload/link';
+
+interface Props {
+  label: string;
+  links: LinkLike[];
+  class?: string;
+}
+
+const { label, links, class: className } = Astro.props;
+---
+
+<div class:list={['flex flex-col items-start gap-8', className]}>
+  <FooterLabel>{label}</FooterLabel>
+  <ul class="flex flex-col items-start gap-2.5">
+    {
+      links.map((link) => (
+        <li>
+          <a
+            href={resolveLinkHref(link)}
+            class="text-button leading-[1.4] tracking-button text-white transition-opacity hover:opacity-80"
+          >
+            {link.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>

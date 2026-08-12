@@ -1,0 +1,24 @@
+---
+import Heading from '../../ui/Heading/Heading.astro';
+
+interface Props {
+  step: string;
+  title: string;
+  class?: string;
+}
+
+const { step, title, class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    'flex w-full items-center justify-between gap-4 self-stretch border-b border-white/16 py-6 first:pt-0',
+    className,
+  ]}
+>
+  <div class="flex w-full max-w-65.5 shrink-0 flex-col gap-4">
+    <p class="text-tagline font-medium text-gold/80">{step}</p>
+    <Heading as="h3" class="text-white">{title}</Heading>
+  </div>
+  <p class="max-w-79.5 text-body text-white/80"><slot /></p>
+</div>

@@ -1,0 +1,55 @@
+---
+interface Props {
+  question: string;
+  open?: boolean;
+  class?: string;
+}
+
+const { question, open = false, class: className } = Astro.props;
+---
+
+<details class:list={['group border-b border-[rgba(3,15,34,0.08)] py-6', className]} open={open}>
+  <summary
+    class="flex cursor-pointer list-none items-center justify-between gap-6 [&::-webkit-details-marker]:hidden"
+  >
+    <span class="font-serif text-h3 tracking-h3 text-navy">{question}</span>
+    <span
+      class="relative grid h-8 w-8 shrink-0 place-items-center rounded-full border border-navy text-navy cursor-pointer"
+      aria-hidden="true"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        class="h-4 w-4 opacity-100 group-open:opacity-0"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="M4 8h8M8 12V4"
+        />
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        class="absolute h-4 w-4 opacity-0 group-open:opacity-100"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="M4 8h8"
+        />
+      </svg>
+    </span>
+  </summary>
+  <div class="pt-6  font-sans text-body text-navy/80">
+    <slot />
+  </div>
+</details>

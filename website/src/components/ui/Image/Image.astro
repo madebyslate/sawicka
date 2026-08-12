@@ -1,0 +1,9 @@
+---
+import { Image as AstroImage, type LocalImageProps, type RemoteImageProps } from 'astro:assets';
+
+type Props = (LocalImageProps | RemoteImageProps) & { class?: string };
+
+const { class: className, loading = 'lazy', ...rest } = Astro.props;
+---
+
+<AstroImage {...rest} loading={loading} class={className} />

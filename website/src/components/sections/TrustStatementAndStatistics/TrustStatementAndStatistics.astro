@@ -1,0 +1,45 @@
+---
+import Container from '../../ui/Container/Container.astro';
+import Section from '../../ui/Section/Section.astro';
+import SectionLabel from '../../ui/SectionLabel/SectionLabel.astro';
+import Heading from '../../ui/Heading/Heading.astro';
+import Stat from './Stat.astro';
+
+interface StatItem {
+  value: string;
+  suffix?: string | null;
+  label: string;
+}
+
+interface Props {
+  tagline?: string | null;
+  heading: string;
+  stats?: StatItem[] | null;
+}
+
+const { tagline, heading, stats } = Astro.props;
+---
+
+<Section class="bg-cream">
+  <Container>
+    <div class="flex w-full flex-col items-start gap-20">
+      <div class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <Heading as="h2" class="lg:max-w-3xl">
+          {heading}
+        </Heading>
+        {tagline && <SectionLabel class="shrink-0">{tagline}</SectionLabel>}
+      </div>
+
+      <dl class="grid w-full grid-cols-2 gap-x-8 gap-y-10 lg:flex lg:items-center lg:justify-end lg:gap-x-[49.5px]">
+        {
+          (stats ?? []).map((stat, index) => (
+            <>
+              {index > 0 && <div class="hidden h-20 w-px shrink-0 bg-navy/10 lg:block" />}
+              <Stat value={stat.value} suffix={stat.suffix} label={stat.label} />
+            </>
+          ))
+        }
+      </dl>
+    </div>
+  </Container>
+</Section>

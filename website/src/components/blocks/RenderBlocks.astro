@@ -1,0 +1,53 @@
+---
+import type { Page } from '@payload-types';
+import Hero from '@sections/Hero/Hero.astro';
+import CTA from '@sections/CTA/CTA.astro';
+import Blog from '@sections/Blog/Blog.astro';
+import Faq from '@sections/Faq/Faq.astro';
+import Testimonials from '@sections/Testimonials/Testimonials.astro';
+import OnboardingProcess from '@sections/OnboardingProcess/OnboardingProcess.astro';
+import ExperienceAndTrust from '@sections/ExperienceAndTrust/ExperienceAndTrust.astro';
+import PersonalRelationship from '@sections/PersonalRelationship/PersonalRelationship.astro';
+import Services from '@sections/Services/Services.astro';
+import PainPoints from '@sections/PainPoints/PainPoints.astro';
+import TrustStatementAndStatistics from '@sections/TrustStatementAndStatistics/TrustStatementAndStatistics.astro';
+
+type Blocks = NonNullable<Page['content']>;
+
+interface Props {
+  blocks: Blocks;
+}
+
+const { blocks } = Astro.props;
+---
+
+{
+  blocks.map((block) => {
+    switch (block.blockType) {
+      case 'hero':
+        return <Hero {...block} />;
+      case 'trustStatementAndStatistics':
+        return <TrustStatementAndStatistics {...block} />;
+      case 'painPoints':
+        return <PainPoints {...block} />;
+      case 'services':
+        return <Services {...block} />;
+      case 'personalRelationship':
+        return <PersonalRelationship {...block} />;
+      case 'experienceAndTrust':
+        return <ExperienceAndTrust {...block} />;
+      case 'onboardingProcess':
+        return <OnboardingProcess {...block} />;
+      case 'testimonials':
+        return <Testimonials {...block} />;
+      case 'blog':
+        return <Blog {...block} />;
+      case 'faq':
+        return <Faq {...block} />;
+      case 'cta':
+        return <CTA {...block} />;
+      default:
+        return null;
+    }
+  })
+}

@@ -1,0 +1,72 @@
+---
+import type { Media } from '@payload-types';
+import Container from '../../ui/Container/Container.astro';
+import Section from '../../ui/Section/Section.astro';
+import Heading from '../../ui/Heading/Heading.astro';
+import ServiceItem from './ServiceItem.astro';
+import type { LinkLike } from '../../../lib/payload/link';
+
+// Blok "services" z Pages.content (payload/src/blocks/ServicesBlock.ts) —
+// reusable, wygląd 1:1 z poprzedniej hardcoded wersji.
+interface Service {
+  number: string;
+  title: string;
+  description: string;
+  areas?: { value: string }[] | null;
+  image?: number | Media | null;
+  button?: LinkLike | null;
+}
+
+interface Props {
+  tagline?: string | null;
+  heading: string;
+  description?: string | null;
+  services?: Service[] | null;
+}
+
+const { tagline, heading, description, services } = Astro.props;
+---
+
+<Section class="bg-navy pt-[100px] pb-[120px]">
+  <Container>
+    <div class="flex w-full flex-col items-start gap-20">
+      <div class="grid w-full grid-cols-1 gap-[80px] lg:grid-cols-[auto_minmax(0,541px)_minmax(0,429px)] lg:items-start lg:gap-x-31.75">
+        {tagline && (
+          <p class="pt-[14px] text-[14px] font-medium uppercase text-white opacity-80"
+             style="font-family: Manrope, sans-serif; line-height: normal;">
+            {tagline}
+          </p>
+        )}
+        <Heading
+          as="h2"
+          class="text-white font-serif text-[48px] leading-[57.6px] tracking-[-1.92px] font-normal max-w-[541px]"
+        >
+          {heading}
+        </Heading>
+        {description && (
+          <div class="flex items-center self-center">
+            <p class="text-[16px] leading-[160%] text-white opacity-80 max-w-[429px]"
+               style="font-family: Inter, sans-serif;">
+              {description}
+            </p>
+          </div>
+        )}
+      </div>
+
+      <div class="flex w-full flex-col gap-10">
+        {
+          (services ?? []).map((service) => (
+            <ServiceItem
+              number={service.number}
+              title={service.title}
+              description={service.description}
+              areas={(service.areas ?? []).map((area) => area.value)}
+              image={service.image}
+              button={service.button}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </Container>
+</Section>
