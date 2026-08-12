@@ -1,11 +1,13 @@
 import type { GlobalConfig } from 'payload'
 import { afterChangeGlobal } from '../hooks/triggerDeployHook'
 import { linkFields } from '../fields/linkFields'
+import { authenticated } from '../access/authenticated'
 
 export const Header: GlobalConfig = {
   slug: 'header',
   access: {
     read: () => true,
+    update: authenticated,
   },
   hooks: {
     afterChange: [afterChangeGlobal],

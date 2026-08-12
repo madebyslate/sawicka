@@ -3,6 +3,7 @@ import { slugField } from 'payload'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
 import { seoFields } from '../fields/seoFields'
+import { authenticated } from '../access/authenticated'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
@@ -12,6 +13,9 @@ export const Posts: CollectionConfig = {
   },
   access: {
     read: () => true,
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
   },
   hooks: {
     afterChange: [afterChangeCollection],

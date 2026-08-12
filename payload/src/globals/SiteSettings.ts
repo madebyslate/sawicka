@@ -1,10 +1,12 @@
 import type { GlobalConfig } from 'payload'
 import { afterChangeGlobal } from '../hooks/triggerDeployHook'
+import { authenticated } from '../access/authenticated'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   access: {
     read: () => true,
+    update: authenticated,
   },
   hooks: {
     afterChange: [afterChangeGlobal],

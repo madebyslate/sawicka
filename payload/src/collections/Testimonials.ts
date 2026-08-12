@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
+import { authenticated } from '../access/authenticated'
 
 export const Testimonials: CollectionConfig = {
   slug: 'testimonials',
@@ -9,6 +10,9 @@ export const Testimonials: CollectionConfig = {
   },
   access: {
     read: () => true,
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
   },
   hooks: {
     afterChange: [afterChangeCollection],

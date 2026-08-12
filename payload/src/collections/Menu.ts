@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
 import { linkFields } from '../fields/linkFields'
+import { authenticated } from '../access/authenticated'
 
 export const Menu: CollectionConfig = {
   slug: 'menu',
@@ -10,6 +11,9 @@ export const Menu: CollectionConfig = {
   },
   access: {
     read: () => true,
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
   },
   hooks: {
     afterChange: [afterChangeCollection],

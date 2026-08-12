@@ -1,6 +1,7 @@
 import type { CollectionConfig, TextField } from 'payload'
 import { slugField } from 'payload'
 import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
+import { authenticated } from '../access/authenticated'
 import { HeroBlock } from '../blocks/HeroBlock'
 import { CTABlock } from '../blocks/CTABlock'
 import { BlogBlock } from '../blocks/BlogBlock'
@@ -24,6 +25,9 @@ export const Pages: CollectionConfig = {
   },
   access: {
     read: () => true,
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
   },
   hooks: {
     beforeChange: [applyPageTemplate],

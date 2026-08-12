@@ -2,6 +2,7 @@ import type { CollectionConfig, TextField } from 'payload'
 import { slugField } from 'payload'
 import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
 import { seoFields } from '../fields/seoFields'
+import { authenticated } from '../access/authenticated'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
@@ -11,6 +12,9 @@ export const Categories: CollectionConfig = {
   },
   access: {
     read: () => true,
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
   },
   hooks: {
     afterChange: [afterChangeCollection],
