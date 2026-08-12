@@ -30,7 +30,10 @@ async function runSeed(file: string) {
       'pnpm',
       ['exec', 'tsx', path.join(dirname, file)],
       {
-        cwd: path.resolve(dirname, '..'),
+        // Payload's default upload.staticDir is relative to the process cwd.
+        // Run every child seed from the Payload project root so uploads land
+        // in /app/payload/media, which is the persistent Docker volume.
+        cwd: path.resolve(dirname, '../..'),
       },
     )
 

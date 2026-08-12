@@ -59,6 +59,14 @@ writes uploaded files to the same persistent `payload-media` volume. Clearing
 `DEPLOY_HOOK_URL` for this one command prevents every seeded document from
 triggering another xCloud deployment.
 
+Deployments made before the seed working-directory fix may have media records
+in PostgreSQL without files in the persistent volume. Repair those files once,
+without changing database records or page content:
+
+```sh
+docker compose --env-file .env run --rm --no-deps payload pnpm repair:media
+```
+
 Do not keep the seed command in later deployments. Although the seed scripts
 skip many existing records, some of them intentionally update existing menus or
 page blocks and could overwrite later editorial changes.
