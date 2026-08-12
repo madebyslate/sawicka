@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import { resolve } from 'path';
 
 export default defineConfig({
-  site: 'https://sawicka-grzyby.pl',
+  site: 'https://sawickagrzyb.pl',
   output: 'static',
   build: {
     inlineStylesheets: 'always',
