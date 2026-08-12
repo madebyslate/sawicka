@@ -2,7 +2,7 @@
   "name": "sawicka-grzyb",
   "version": "1.0.0",
   "private": true,
-  "description": "Sawicka Grzyby — Księgowość i Podatki. Monorepo: payload/ (CMS) + website/ (Astro).",
+  "description": "Sawicka Grzyb — Księgowość i Podatki. Monorepo: payload/ (CMS) + website/ (Astro).",
   "scripts": {
     "dev:payload": "cd payload && docker compose up -d",
     "dev:website": "cd website && pnpm dev",
