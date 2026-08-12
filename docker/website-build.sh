@@ -14,6 +14,18 @@ case "$PUBLIC_SITE_URL" in
   *) echo "PUBLIC_SITE_URL must be an http(s) URL" >&2; exit 1 ;;
 esac
 
+attempt=1
+until node -e "fetch('${PAYLOAD_API_URL}/pages?limit=1&depth=0').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"; do
+  if [ "$attempt" -ge 30 ]; then
+    echo "Payload API did not become ready after 60 seconds" >&2
+    exit 1
+  fi
+
+  echo "Waiting for Payload API ($attempt/30)..."
+  attempt=$((attempt + 1))
+  sleep 2
+done
+
 cd /app/website
 pnpm build
 

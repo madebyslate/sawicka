@@ -6,7 +6,9 @@ long-lived application containers:
 - `payload` runs Payload CMS on private port 3000 and joins the external
   PostgreSQL network;
 - `website-build` is a one-shot Astro builder. It waits for Payload, fetches
-  CMS content over private HTTP, writes static `dist` files, and exits;
+  CMS content over private HTTP, writes static `dist` files, and exits. It uses
+  the `build` profile, so xCloud's automatic initial `compose up` does not run
+  it before database migrations;
 - `router` serves the static Astro files and proxies `/admin`, `/api`, and
   `/_next` to Payload on private port 3000.
 
@@ -41,13 +43,15 @@ loads the full content from `payload/src/seed/seed.ts`, and only then starts
 Payload and the static Astro build:
 
 ```sh
-set -eu
-
-docker compose build --pull
-docker compose run --rm --no-deps payload pnpm payload migrate
-docker compose run --rm --no-deps -e DEPLOY_HOOK_URL= payload pnpm seed
-docker compose up -d --remove-orphans
-docker compose ps
+docker compose --env-file .env pull
+docker compose --env-file .env down
+docker compose --env-file .env build --pull payload website-build
+docker compose --env-file .env run --rm --no-deps payload pnpm payload migrate
+docker compose --env-file .env run --rm --no-deps -e DEPLOY_HOOK_URL= payload pnpm seed
+docker compose --env-file .env up -d payload
+docker compose --env-file .env run --rm --no-deps website-build
+docker compose --env-file .env up -d --remove-orphans
+docker compose --env-file .env ps
 ```
 
 The seed container uses Payload Local API, connects directly to PostgreSQL, and
@@ -65,12 +69,14 @@ Use this as the xCloud deployment script after the repository has been checked
 out:
 
 ```sh
-set -eu
-
-docker compose build --pull
-docker compose run --rm --no-deps payload pnpm payload migrate
-docker compose up -d --remove-orphans
-docker compose ps
+docker compose --env-file .env pull
+docker compose --env-file .env down
+docker compose --env-file .env build --pull payload website-build
+docker compose --env-file .env run --rm --no-deps payload pnpm payload migrate
+docker compose --env-file .env up -d payload
+docker compose --env-file .env run --rm --no-deps website-build
+docker compose --env-file .env up -d --remove-orphans
+docker compose --env-file .env ps
 ```
 
 Migrations are deliberately separate from Payload startup. The command is safe
@@ -81,12 +87,12 @@ an existing, unrelated database.
 
 ## Static content lifecycle
 
-Every deployment starts a fresh `website-build` one-shot container after
-Payload becomes healthy. It fetches current CMS content and atomically switches
-Nginx to the new static release. Code changes therefore require the normal Git
-push and xCloud redeploy. Payload content changes also require a redeploy; set
-`DEPLOY_HOOK_URL` to an xCloud redeploy webhook to automate that, or trigger a
-manual redeploy after editing content.
+Every deployment script explicitly runs a fresh `website-build` one-shot
+container after migrations and after Payload has started. It fetches current CMS
+content and atomically switches Nginx to the new static release. Code changes
+therefore require the normal Git push and xCloud redeploy. Payload content
+changes also require a redeploy; set `DEPLOY_HOOK_URL` to an xCloud redeploy
+webhook to automate that, or trigger a manual redeploy after editing content.
 
 The Docker image build itself does not need database credentials and does not
 fetch CMS content. This avoids putting secrets in image layers and avoids the
