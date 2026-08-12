@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import { resolve } from 'path';
 
 export default defineConfig({
-  site: 'https://sawickagrzyb.pl',
+  site: process.env.PUBLIC_SITE_URL ?? 'https://sawickagrzyb.pl',
   output: 'static',
   build: {
     inlineStylesheets: 'always',

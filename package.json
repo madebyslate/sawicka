@@ -2,6 +2,10 @@
   "name": "sawicka-grzyb",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@11.20.0",
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "description": "Sawicka Grzyb — Księgowość i Podatki. Monorepo: payload/ (CMS) + website/ (Astro).",
   "scripts": {
     "dev:payload": "cd payload && docker compose up -d",

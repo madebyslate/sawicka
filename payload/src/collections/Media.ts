@@ -1,9 +1,14 @@
 import type { CollectionConfig } from 'payload'
+import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
 
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [afterChangeCollection],
+    afterDelete: [afterDeleteCollection],
   },
   fields: [
     {

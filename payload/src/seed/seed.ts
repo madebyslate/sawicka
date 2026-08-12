@@ -27,8 +27,8 @@ async function runSeed(file: string) {
 
   try {
     const { stdout, stderr } = await execFileAsync(
-      'npx',
-      ['tsx', path.join(dirname, file)],
+      'pnpm',
+      ['exec', 'tsx', path.join(dirname, file)],
       {
         cwd: path.resolve(dirname, '..'),
       },

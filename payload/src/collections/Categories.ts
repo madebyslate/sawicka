@@ -1,6 +1,6 @@
 import type { CollectionConfig, TextField } from 'payload'
 import { slugField } from 'payload'
-import { afterChangeCollection } from '../hooks/triggerDeployHook'
+import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
 import { seoFields } from '../fields/seoFields'
 
 export const Categories: CollectionConfig = {
@@ -14,6 +14,7 @@ export const Categories: CollectionConfig = {
   },
   hooks: {
     afterChange: [afterChangeCollection],
+    afterDelete: [afterDeleteCollection],
   },
   admin: {
     group: 'Treść',

@@ -22,6 +22,7 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  serverURL: process.env.PUBLIC_SITE_URL || undefined,
   admin: {
     user: Users.slug,
     importMap: {

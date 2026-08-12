@@ -1,7 +1,7 @@
 import type { CollectionConfig, TextField } from 'payload'
 import { slugField } from 'payload'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { afterChangeCollection } from '../hooks/triggerDeployHook'
+import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
 import { seoFields } from '../fields/seoFields'
 
 export const Posts: CollectionConfig = {
@@ -15,6 +15,7 @@ export const Posts: CollectionConfig = {
   },
   hooks: {
     afterChange: [afterChangeCollection],
+    afterDelete: [afterDeleteCollection],
   },
   admin: {
     group: 'Treść',

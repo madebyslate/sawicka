@@ -1,4 +1,4 @@
-import type { GlobalAfterChangeHook, CollectionAfterChangeHook } from 'payload'
+import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, GlobalAfterChangeHook } from 'payload'
 
 async function triggerDeployHook(): Promise<void> {
   const url = process.env.DEPLOY_HOOK_URL
@@ -22,5 +22,9 @@ export const afterChangeGlobal: GlobalAfterChangeHook = async () => {
 }
 
 export const afterChangeCollection: CollectionAfterChangeHook = async () => {
+  void triggerDeployHook()
+}
+
+export const afterDeleteCollection: CollectionAfterDeleteHook = async () => {
   void triggerDeployHook()
 }

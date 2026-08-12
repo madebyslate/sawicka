@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { afterChangeCollection } from '../hooks/triggerDeployHook'
+import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
 import { linkFields } from '../fields/linkFields'
 
 export const Menu: CollectionConfig = {
@@ -13,6 +13,7 @@ export const Menu: CollectionConfig = {
   },
   hooks: {
     afterChange: [afterChangeCollection],
+    afterDelete: [afterDeleteCollection],
   },
   admin: {
     group: 'Ustawienia',

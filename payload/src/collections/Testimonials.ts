@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { afterChangeCollection } from '../hooks/triggerDeployHook'
+import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
 
 export const Testimonials: CollectionConfig = {
   slug: 'testimonials',
@@ -12,6 +12,7 @@ export const Testimonials: CollectionConfig = {
   },
   hooks: {
     afterChange: [afterChangeCollection],
+    afterDelete: [afterDeleteCollection],
   },
   admin: {
     group: 'Treść',

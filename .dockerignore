@@ -1,0 +1,16 @@
+.git
+.github
+.env
+**/.env
+**/.env.*
+!**/.env.example
+**/node_modules
+**/.next
+**/dist
+**/.astro
+**/storybook-static
+**/test-results
+**/playwright-report
+payload/media
+.DS_Store
+**/.DS_Store

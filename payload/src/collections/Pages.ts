@@ -1,6 +1,6 @@
 import type { CollectionConfig, TextField } from 'payload'
 import { slugField } from 'payload'
-import { afterChangeCollection } from '../hooks/triggerDeployHook'
+import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
 import { HeroBlock } from '../blocks/HeroBlock'
 import { CTABlock } from '../blocks/CTABlock'
 import { BlogBlock } from '../blocks/BlogBlock'
@@ -28,6 +28,7 @@ export const Pages: CollectionConfig = {
   hooks: {
     beforeChange: [applyPageTemplate],
     afterChange: [afterChangeCollection],
+    afterDelete: [afterDeleteCollection],
   },
   admin: {
     group: 'Treść',
