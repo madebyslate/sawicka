@@ -10,7 +10,7 @@
     "build:website": "cd website && pnpm build",
     "generate:types": "cd payload && pnpm generate:types",
     "check:website": "cd website && pnpm check",
-    "seed:testimonials": "cd payload && pnpm exec tsx src/seed/seedTestimonials.ts",
+    "seed": "pnpm --filter payload seed",
     "storybook": "cd website && pnpm storybook"
   }
 }
