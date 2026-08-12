@@ -51,7 +51,7 @@ services:
     init: true
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-8080}:8080"
+      - "${APP_PORT:-8081}:8080"
     volumes:
       - website-dist:/srv/website:ro
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro

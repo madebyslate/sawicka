@@ -10,8 +10,9 @@ long-lived application containers:
 - `router` serves the static Astro files and proxies `/admin`, `/api`, and
   `/_next` to Payload on private port 3000.
 
-Only `router` publishes a host port: 8080 by default. Configure the xCloud
-domain for this service and select container/Primary port `8080`.
+Only `router` publishes host port 8081 by default and maps it to Nginx port
+8080 inside the container. Configure the xCloud domain for the `router` service
+and select published/Primary port `8081`.
 
 ## Environment
 
@@ -23,7 +24,7 @@ Create the xCloud environment from `.env.example`. Do not commit `.env`.
 - `PAYLOAD_SECRET`: a long, stable random value;
 - `POSTGRES_NETWORK`: existing external Docker network, normally
   `phobos-internal`;
-- `APP_PORT`: host port published by Nginx, normally `8080`;
+- `APP_PORT`: host port published by Nginx, normally `8081`;
 - `PAYLOAD_MEDIA_VOLUME`: stable volume name, normally
   `sawicka-payload-media`;
 - `DEPLOY_HOOK_URL`: optional xCloud Git redeploy webhook.
