@@ -1,6 +1,7 @@
 import { getPayload } from 'payload'
 import config from '../payload.config'
 import { buildContent, type LexicalBlock } from './lexicalBuilder'
+import { uploadIcon } from './iconAssets'
 
 const homeBlockUpdates: Record<string, Record<string, unknown>> = {
   hero: {
@@ -25,22 +26,18 @@ const homeBlockUpdates: Record<string, Record<string, unknown>> = {
       'Wielu przedsiębiorców trafia do nas sfrustrowanych powolną komunikacją, niejasnymi dokumentami albo niewiedzą, kto tak naprawdę zajmuje się ich firmą. Jeśli którakolwiek z tych sytuacji brzmi znajomo, nie jesteś sam.',
     painPoints: [
       {
-        icon: '/icons/phone-off.svg',
         title: 'Nigdy nie mogę się dodzwonić do księgowej',
         description: 'Każde pytanie zamienia się w nowy wątek mailowy albo kolejną osobę, której muszę wszystko wyjaśniać od nowa.',
       },
       {
-        icon: '/icons/alert.svg',
         title: 'Boję się kosztownych pomyłek',
         description: 'Jeden brakujący dokument albo źle zrozumiany przepis może stać się drogim problemem.',
       },
       {
-        icon: '/icons/file-stack.svg',
         title: 'Wszystko wydaje się skomplikowane',
         description: 'Terminy podatkowe, dokumenty, przepisy — trudno wiedzieć, co naprawdę jest ważne.',
       },
       {
-        icon: '/icons/refresh.svg',
         title: 'Zmiana księgowej wydaje się zbyt dużym wysiłkiem',
         description: 'Zmiana biura rachunkowego wydaje się ryzykowna i czasochłonna, więc wiele firm zostaje w miejscu.',
       },
@@ -141,14 +138,13 @@ const homeBlockUpdates: Record<string, Record<string, unknown>> = {
     description:
       'Duże biura często dzielą obowiązki między działy. Tutaj zawsze będziesz wiedzieć dokładnie, kto zajmuje się Twoją firmą.',
     features: [
-      { icon: '/icons/user.svg', title: 'Znam Twoją firmę osobiście', description: 'Nie musisz powtarzać swojej historii różnym osobom.' },
-      { icon: '/icons/messages.svg', title: 'Bezpośrednia komunikacja', description: 'Pytania trafiają wprost do osoby odpowiedzialnej.' },
+      { title: 'Znam Twoją firmę osobiście', description: 'Nie musisz powtarzać swojej historii różnym osobom.' },
+      { title: 'Bezpośrednia komunikacja', description: 'Pytania trafiają wprost do osoby odpowiedzialnej.' },
       {
-        icon: '/icons/zap.svg',
         title: 'Decyzje bez opóźnień',
         description: 'Żadnego „muszę zapytać koleżankę". Tylko konkretne odpowiedzi, kiedy ich potrzebujesz.',
       },
-      { icon: '/icons/shield.svg', title: 'Osobista odpowiedzialność', description: 'Twoja firma zasługuje na zaangażowanie, a nie przekazywanie z rąk do rąk.' },
+      { title: 'Osobista odpowiedzialność', description: 'Twoja firma zasługuje na zaangażowanie, a nie przekazywanie z rąk do rąk.' },
     ],
   },
   testimonials: {
@@ -672,6 +668,28 @@ const termsAndConditionsContent: LexicalBlock[] = [
 
 async function sync() {
   const payload = await getPayload({ config })
+
+  const [phoneOffIconId, alertIconId, fileStackIconId, refreshIconId, userIconId, messagesIconId, zapIconId, shieldIconId] =
+    await Promise.all([
+      uploadIcon(payload, 'phoneOff'),
+      uploadIcon(payload, 'alert'),
+      uploadIcon(payload, 'fileStack'),
+      uploadIcon(payload, 'refresh'),
+      uploadIcon(payload, 'user'),
+      uploadIcon(payload, 'messages'),
+      uploadIcon(payload, 'zap'),
+      uploadIcon(payload, 'shield'),
+    ])
+
+  const painPointsIcons = [phoneOffIconId, alertIconId, fileStackIconId, refreshIconId]
+  ;(homeBlockUpdates.painPoints.painPoints as Record<string, unknown>[]).forEach((item, index) => {
+    item.iconImage = painPointsIcons[index]
+  })
+
+  const featureIcons = [userIconId, messagesIconId, zapIconId, shieldIconId]
+  ;(homeBlockUpdates.personalRelationship.features as Record<string, unknown>[]).forEach((item, index) => {
+    item.iconImage = featureIcons[index]
+  })
 
   const homePage = await payload.find({ collection: 'pages', where: { slug: { equals: '/' } }, limit: 1 })
   const page = homePage.docs[0]

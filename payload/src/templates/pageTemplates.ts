@@ -47,22 +47,19 @@ export const pageTemplates: PageTemplateDefinition[] = [
         // image (wymagane) — celowo pominięte, patrz komentarz u góry pliku.
         painPoints: [
           {
-            icon: '/icons/phone-off.svg',
+            // iconImage (wymagane wizualnie) — celowo pominięte, patrz komentarz u góry pliku.
             title: 'I Never Reach My Accountant',
             description: 'Every question becomes a new email chain or another person to explain everything to.',
           },
           {
-            icon: '/icons/alert.svg',
             title: "I'm Afraid of Costly Mistakes",
             description: 'One missed document or misunderstood regulation can become an expensive problem.',
           },
           {
-            icon: '/icons/file-stack.svg',
             title: 'Everything Feels Complicated',
             description: "Tax deadlines, paperwork, regulations — it's difficult to know what really matters.",
           },
           {
-            icon: '/icons/refresh.svg',
             title: 'Switching Seems Like Too Much Work',
             description: 'Changing accountants feels risky and time-consuming, so many businesses stay stuck.',
           },
@@ -126,22 +123,18 @@ export const pageTemplates: PageTemplateDefinition[] = [
         // image (wymagane) — celowo pominięte.
         features: [
           {
-            icon: '/icons/user.svg',
             title: 'I Know Your Business Personally',
             description: 'No repeating your story to different people.',
           },
           {
-            icon: '/icons/messages.svg',
             title: 'Direct Communication',
             description: 'Questions go directly to the person responsible.',
           },
           {
-            icon: '/icons/zap.svg',
             title: 'Decisions Without Delays',
             description: 'No "I\'ll ask a colleague." Just practical answers when you need them.',
           },
           {
-            icon: '/icons/shield.svg',
             title: 'Personal Accountability',
             description: 'Your business deserves ownership not handoffs.',
           },

@@ -51,8 +51,14 @@ export const PainPointsBlock: Block = {
         {
           name: 'icon',
           type: 'text',
-          required: true,
-          label: 'Ikona (ścieżka, np. "/icons/phone-off.svg")',
+          label: 'Ikona (stare pole, nieużywane — patrz "Ikona (plik)")',
+          admin: { hidden: true },
+        },
+        {
+          name: 'iconImage',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Ikona (plik)',
         },
         {
           name: 'title',

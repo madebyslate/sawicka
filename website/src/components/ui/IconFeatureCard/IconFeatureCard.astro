@@ -1,14 +1,18 @@
 ---
+import type { Media } from '@payload-types';
 import Icon from '../Icon/Icon.astro';
 import Heading from '../Heading/Heading.astro';
+import { resolveMediaUrl } from '../../../lib/payload/media';
 
 interface Props {
-  icon: string;
+  icon?: number | Media | null;
   title: string;
   class?: string;
 }
 
 const { icon, title, class: className } = Astro.props;
+const iconUrl = resolveMediaUrl(icon);
+const iconAlt = icon && typeof icon === 'object' ? (icon.alt ?? '') : '';
 ---
 
 <div
@@ -17,9 +21,11 @@ const { icon, title, class: className } = Astro.props;
     className,
   ]}
 >
-  <span class="grid size-[62px] shrink-0 place-items-center rounded-icon bg-bronze">
-    <Icon src={icon} alt="" size={32} />
-  </span>
+  {iconUrl && (
+    <span class="grid size-[62px] shrink-0 place-items-center rounded-icon bg-bronze">
+      <Icon src={iconUrl} alt={iconAlt} size={32} />
+    </span>
+  )}
   <div class="flex flex-col gap-[10px]">
     <Heading
       as="h3"

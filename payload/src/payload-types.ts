@@ -297,7 +297,8 @@ export interface Page {
             image?: (number | null) | Media;
             painPoints?:
               | {
-                  icon: string;
+                  icon?: string | null;
+                  iconImage?: (number | null) | Media;
                   title: string;
                   description: string;
                   id?: string | null;
@@ -372,7 +373,8 @@ export interface Page {
             image?: (number | null) | Media;
             features?:
               | {
-                  icon: string;
+                  icon?: string | null;
+                  iconImage?: (number | null) | Media;
                   title: string;
                   description: string;
                   id?: string | null;
@@ -901,6 +903,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     icon?: T;
+                    iconImage?: T;
                     title?: T;
                     description?: T;
                     id?: T;
@@ -960,6 +963,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     icon?: T;
+                    iconImage?: T;
                     title?: T;
                     description?: T;
                     id?: T;

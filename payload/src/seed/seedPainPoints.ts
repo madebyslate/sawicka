@@ -3,6 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { getPayload } from 'payload'
 import config from '../payload.config'
+import { uploadIcon } from './iconAssets'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -57,6 +58,13 @@ async function seed() {
     console.log(`✓ Wgrano media "sound-familiar-meeting" (${mediaId})`)
   }
 
+  const [phoneOffIconId, alertIconId, fileStackIconId, refreshIconId] = await Promise.all([
+    uploadIcon(payload, 'phoneOff'),
+    uploadIcon(payload, 'alert'),
+    uploadIcon(payload, 'fileStack'),
+    uploadIcon(payload, 'refresh'),
+  ])
+
   const painPointsBlock = {
     blockType: 'painPoints' as const,
     tagline: 'Problemy klientów',
@@ -66,22 +74,22 @@ async function seed() {
     image: mediaId,
     painPoints: [
       {
-        icon: '/icons/phone-off.svg',
+        iconImage: phoneOffIconId,
         title: 'Nigdy nie mogę się dodzwonić do księgowej',
         description: 'Każde pytanie zamienia się w nowy wątek mailowy albo kolejną osobę, której muszę wszystko wyjaśniać od nowa.',
       },
       {
-        icon: '/icons/alert.svg',
+        iconImage: alertIconId,
         title: 'Boję się kosztownych pomyłek',
         description: 'Jeden brakujący dokument albo źle zrozumiany przepis może stać się drogim problemem.',
       },
       {
-        icon: '/icons/file-stack.svg',
+        iconImage: fileStackIconId,
         title: 'Wszystko wydaje się skomplikowane',
         description: 'Terminy podatkowe, dokumenty, przepisy — trudno wiedzieć, co naprawdę jest ważne.',
       },
       {
-        icon: '/icons/refresh.svg',
+        iconImage: refreshIconId,
         title: 'Zmiana księgowej wydaje się zbyt dużym wysiłkiem',
         description: 'Zmiana biura rachunkowego wydaje się ryzykowna i czasochłonna, więc wiele firm zostaje w miejscu.',
       },

@@ -3,6 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { getPayload } from 'payload'
 import config from '../payload.config'
+import { uploadIcon } from './iconAssets'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -57,6 +58,13 @@ async function seed() {
     console.log(`✓ Wgrano media "why-work-with-me" (${mediaId})`)
   }
 
+  const [userIconId, messagesIconId, zapIconId, shieldIconId] = await Promise.all([
+    uploadIcon(payload, 'user'),
+    uploadIcon(payload, 'messages'),
+    uploadIcon(payload, 'zap'),
+    uploadIcon(payload, 'shield'),
+  ])
+
   const personalRelationshipBlock = {
     blockType: 'personalRelationship' as const,
     tagline: 'Osobista relacja',
@@ -66,22 +74,22 @@ async function seed() {
     image: mediaId,
     features: [
       {
-        icon: '/icons/user.svg',
+        iconImage: userIconId,
         title: 'Znam Twoją firmę osobiście',
         description: 'Nie musisz powtarzać swojej historii różnym osobom.',
       },
       {
-        icon: '/icons/messages.svg',
+        iconImage: messagesIconId,
         title: 'Bezpośrednia komunikacja',
         description: 'Pytania trafiają wprost do osoby odpowiedzialnej.',
       },
       {
-        icon: '/icons/zap.svg',
+        iconImage: zapIconId,
         title: 'Decyzje bez opóźnień',
         description: 'Żadnego „muszę zapytać koleżankę". Tylko konkretne odpowiedzi, kiedy ich potrzebujesz.',
       },
       {
-        icon: '/icons/shield.svg',
+        iconImage: shieldIconId,
         title: 'Osobista odpowiedzialność',
         description: 'Twoja firma zasługuje na zaangażowanie, a nie przekazywanie z rąk do rąk.',
       },
