@@ -25,6 +25,24 @@ export const Posts: CollectionConfig = {
     group: 'Treść',
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'publishedDate', 'updatedAt'],
+    preview: async (doc, { req }) => {
+      const slug = doc.slug as string | undefined
+      if (!slug) return null
+
+      let categorySlug: string | undefined
+      const category = doc.category as number | { slug?: string } | null | undefined
+      if (category && typeof category === 'object') {
+        categorySlug = category.slug
+      } else if (typeof category === 'number') {
+        const categoryDoc = await req.payload.findByID({ collection: 'categories', id: category, depth: 0 })
+        categorySlug = categoryDoc?.slug
+      }
+
+      if (!categorySlug) return null
+
+      const baseUrl = process.env.PUBLIC_FRONTEND_URL || ''
+      return `${baseUrl}/${categorySlug}/${slug}`
+    },
   },
   fields: [
     {
@@ -68,6 +86,25 @@ export const Posts: CollectionConfig = {
       type: 'richText',
       editor: lexicalEditor(),
       label: 'Treść artykułu',
+    },
+    {
+      name: 'faqs',
+      type: 'array',
+      label: 'FAQ (opcjonalnie, pokazuje się pod treścią artykułu)',
+      fields: [
+        {
+          name: 'question',
+          type: 'text',
+          required: true,
+          label: 'Pytanie',
+        },
+        {
+          name: 'answer',
+          type: 'textarea',
+          required: true,
+          label: 'Odpowiedź',
+        },
+      ],
     },
     {
       name: 'title',

@@ -1,0 +1,35 @@
+---
+interface Props {
+  class?: string;
+  gap?: number;
+  offset?: number;
+  zIndexClass?: string;
+}
+
+const { class: className, gap = 380, offset = 100, zIndexClass = '-z-10' } = Astro.props;
+
+const lineXPercents = [2.22, 27.36, 72.64, 97.78];
+
+function tickTile(gapPx: number) {
+  const mid = gapPx / 2;
+  const svg =
+    `<svg xmlns='http://www.w3.org/2000/svg' width='16' height='${gapPx}' viewBox='0 0 16 ${gapPx}'>` +
+    `<line x1='8' y1='0' x2='8' y2='${gapPx}' stroke='white' stroke-opacity='0.03' stroke-width='1'/>` +
+    `<line x1='1' y1='${mid}' x2='15' y2='${mid}' stroke='white' stroke-opacity='0.1' stroke-width='1'/>` +
+    `<line x1='8' y1='${mid - 7}' x2='8' y2='${mid + 7}' stroke='white' stroke-opacity='0.1' stroke-width='1'/>` +
+    `</svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
+const rowsStyle = `background-image: repeating-linear-gradient(to bottom, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 1px, transparent 1px, transparent ${gap}px); background-position: 0 ${offset}px;`;
+const tickStyle = `background-image: ${tickTile(gap)}; background-repeat: repeat-y; background-size: 16px ${gap}px; background-position: center ${offset - gap / 2}px;`;
+---
+
+<div aria-hidden="true" class:list={['pointer-events-none absolute inset-0 hidden lg:block', zIndexClass, className]}>
+  <div class="absolute inset-0" style={rowsStyle}></div>
+  {
+    lineXPercents.map((x) => (
+      <span class="absolute inset-y-0 w-4" style={`left: calc(${x}% - 8px); ${tickStyle}`} />
+    ))
+  }
+</div>

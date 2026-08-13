@@ -64,7 +64,7 @@ const showButton = button?.label && buttonHref !== '#';
 <Section class="bg-cream">
   <Container>
     <div class="flex w-full flex-col gap-16 lg:flex-row lg:items-stretch lg:gap-[127px] lg:justify-between">
-      <div class="flex w-full flex-col justify-between gap-8 lg:w-[541px]">
+      <div data-reveal style="--reveal-delay: 0ms" class="flex w-full flex-col justify-between gap-8 lg:w-[541px]">
         <div class="flex flex-col gap-4">
           {tagline && <SectionLabel>{tagline}</SectionLabel>}
           <Heading as="h2">{heading}</Heading>
@@ -80,8 +80,8 @@ const showButton = button?.label && buttonHref !== '#';
       </div>
 
       <div class="w-full lg:max-w-2xl">
-        {items.map((faq) => (
-          <AccordionItem question={faq.question} open={false}>
+        {items.map((faq, index) => (
+          <AccordionItem question={faq.question} open={false} revealDelay={150 + index * 100}>
             {faq.answer}
           </AccordionItem>
         ))}

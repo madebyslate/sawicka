@@ -30,10 +30,10 @@ const leftColumn = (features ?? []).filter((_, index) => index % 2 === 0);
 const rightColumn = (features ?? []).filter((_, index) => index % 2 === 1);
 ---
 
-<Section class="bg-cream">
+<Section id="about" class="bg-cream">
   <Container>
     <div class="flex w-full flex-col items-start gap-20">
-      <div class="flex w-full flex-col items-start gap-4">
+      <div data-reveal style="--reveal-delay: 0ms" class="flex w-full flex-col items-start gap-4">
         {tagline && <SectionLabel>{tagline}</SectionLabel>}
         <div class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-center lg:justify-between">
           <Heading as="h2" class="max-w-163.25">
@@ -43,7 +43,11 @@ const rightColumn = (features ?? []).filter((_, index) => index % 2 === 1);
         </div>
       </div>
 
-      <div class="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,429px)_minmax(0,429px)_minmax(0,429px)]">
+      <div
+        data-reveal
+        style="--reveal-delay: 150ms"
+        class="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,429px)_minmax(0,429px)_minmax(0,429px)]"
+      >
         <div class="flex flex-col gap-4">
           {leftColumn.map((item) => (
             <IconFeatureCard icon={item.icon} title={item.title}>

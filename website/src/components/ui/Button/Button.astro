@@ -13,8 +13,8 @@ type Props = LinkProps | ButtonProps;
 const { href, variant = 'primary', size = 'md', type = 'button', class: className, ...rest } = Astro.props;
 
 const base =
-  'inline-flex items-center justify-center gap-2.5 rounded-pill font-sans font-medium ' +
-  'transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
+  'btn-hover inline-flex items-center justify-center gap-2.5 rounded-pill font-sans font-medium ' +
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
 
 const sizes = {
   md: 'px-8 py-4 text-button tracking-button',
@@ -22,9 +22,12 @@ const sizes = {
 };
 
 const variants = {
-  primary: 'bg-gold text-navy hover:bg-gold/90 focus-visible:outline-gold',
-  accent: 'bg-bronze text-white hover:bg-bronze/90 focus-visible:outline-bronze',
-  outline: 'border-[0.5px] border-white text-white hover:bg-white/10 focus-visible:outline-white',
+  primary:
+    'bg-gold text-navy hover:bg-gold-bright hover:shadow-[0_16px_40px_rgba(200,165,106,0.32)] group-hover:bg-gold-bright group-hover:shadow-[0_16px_40px_rgba(200,165,106,0.32)] focus-visible:outline-gold',
+  accent:
+    'bg-bronze text-white hover:bg-bronze/90 hover:shadow-[0_16px_40px_rgba(148,102,37,0.32)] group-hover:bg-bronze/90 group-hover:shadow-[0_16px_40px_rgba(148,102,37,0.32)] focus-visible:outline-bronze',
+  outline:
+    'border-[0.5px] border-white text-white hover:border-gold hover:text-gold group-hover:border-gold group-hover:text-gold focus-visible:outline-white',
 };
 
 const classes = [base, sizes[size], variants[variant], className].filter(Boolean).join(' ');

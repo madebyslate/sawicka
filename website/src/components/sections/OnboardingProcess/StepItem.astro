@@ -5,20 +5,23 @@ interface Props {
   step: string;
   title: string;
   class?: string;
+  revealDelay?: number;
 }
 
-const { step, title, class: className } = Astro.props;
+const { step, title, class: className, revealDelay } = Astro.props;
 ---
 
 <div
+  data-reveal={revealDelay !== undefined ? true : undefined}
+  style={revealDelay !== undefined ? `--reveal-delay: ${revealDelay}ms` : undefined}
   class:list={[
-    'flex w-full items-center justify-between gap-4 self-stretch border-b border-white/16 py-6 first:pt-0',
+    'flex w-full flex-col items-start justify-between gap-4 self-stretch border-b border-white/16 py-6 first:pt-0 lg:flex-row lg:items-center',
     className,
   ]}
 >
-  <div class="flex w-full max-w-65.5 shrink-0 flex-col gap-4">
+  <div class="flex w-full flex-col gap-4 lg:max-w-65.5 lg:shrink-0">
     <p class="text-tagline font-medium text-gold/80">{step}</p>
     <Heading as="h3" class="text-white">{title}</Heading>
   </div>
-  <p class="max-w-79.5 text-body text-white/80"><slot /></p>
+  <p class="text-body text-white/80 lg:max-w-79.5"><slot /></p>
 </div>

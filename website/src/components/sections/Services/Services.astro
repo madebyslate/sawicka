@@ -3,6 +3,7 @@ import type { Media } from '@payload-types';
 import Container from '../../ui/Container/Container.astro';
 import Section from '../../ui/Section/Section.astro';
 import Heading from '../../ui/Heading/Heading.astro';
+import SectionLabel from '../../ui/SectionLabel/SectionLabel.astro';
 import ServiceItem from './ServiceItem.astro';
 import type { LinkLike } from '../../../lib/payload/link';
 
@@ -27,15 +28,18 @@ interface Props {
 const { tagline, heading, description, services } = Astro.props;
 ---
 
-<Section class="bg-navy pt-[100px] pb-[120px]">
+<Section id="services" class="bg-navy pt-[100px] pb-[120px]">
   <Container>
     <div class="flex w-full flex-col items-start gap-20">
-      <div class="grid w-full grid-cols-1 gap-[80px] lg:grid-cols-[auto_minmax(0,541px)_minmax(0,429px)] lg:items-start lg:gap-x-31.75">
+      <div
+        data-reveal
+        style="--reveal-delay: 0ms"
+        class="grid w-full grid-cols-1 gap-[80px] lg:grid-cols-[auto_minmax(0,541px)_minmax(0,429px)] lg:items-start lg:gap-x-31.75"
+      >
         {tagline && (
-          <p class="pt-[14px] text-[14px] font-medium uppercase text-white opacity-80"
-             style="font-family: Manrope, sans-serif; line-height: normal;">
+          <SectionLabel tone="light" class="pt-3.5">
             {tagline}
-          </p>
+          </SectionLabel>
         )}
         <Heading
           as="h2"
@@ -53,9 +57,9 @@ const { tagline, heading, description, services } = Astro.props;
         )}
       </div>
 
-      <div class="flex w-full flex-col gap-10">
+      <div class="flex w-full flex-col gap-15">
         {
-          (services ?? []).map((service) => (
+          (services ?? []).map((service, index) => (
             <ServiceItem
               number={service.number}
               title={service.title}
@@ -63,6 +67,7 @@ const { tagline, heading, description, services } = Astro.props;
               areas={(service.areas ?? []).map((area) => area.value)}
               image={service.image}
               button={service.button}
+              revealDelay={index * 100}
             />
           ))
         }

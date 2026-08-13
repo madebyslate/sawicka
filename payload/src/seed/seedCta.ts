@@ -9,17 +9,6 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 async function seed() {
   const payload = await getPayload({ config })
 
-  const existingPage = await payload.find({
-    collection: 'pages',
-    where: { slug: { equals: '/' } },
-    limit: 1,
-  })
-
-  if (existingPage.docs.length > 0) {
-    console.log('↷ Strona "home" już istnieje — pomijam')
-    process.exit(0)
-  }
-
   const existingMedia = await payload.find({
     collection: 'media',
     where: { alt: { equals: 'Dłoń stemplująca dokument przy biurku' } },
@@ -47,6 +36,39 @@ async function seed() {
     console.log(`✓ Wgrano media "ready-to-work" (${mediaId})`)
   }
 
+  const globalCta = await payload.findGlobal({ slug: 'global-cta' })
+  if (!globalCta.heading) {
+    await payload.updateGlobal({
+      slug: 'global-cta',
+      data: {
+        eyebrow: 'Ready to Work?',
+        heading: "Let's Make Your Accounting Simpler.",
+        description:
+          "Whether you're starting a new business or looking for a more personal accounting experience, I'd be happy to help. Book a free introductory call and let's discuss your business.",
+        backgroundImage: mediaId,
+        button: {
+          label: 'Book a Free Call',
+          type: 'custom',
+          url: '#kontakt',
+        },
+      },
+    })
+    console.log('✓ Ustawiono globalne CTA (Ustawienia → CTA)')
+  } else {
+    console.log('↷ Globalne CTA już ustawione — pomijam')
+  }
+
+  const existingPage = await payload.find({
+    collection: 'pages',
+    where: { slug: { equals: '/' } },
+    limit: 1,
+  })
+
+  if (existingPage.docs.length > 0) {
+    console.log('↷ Strona "home" już istnieje — pomijam')
+    process.exit(0)
+  }
+
   const page = await payload.create({
     collection: 'pages',
     data: {
@@ -57,16 +79,7 @@ async function seed() {
       content: [
         {
           blockType: 'cta',
-          eyebrow: 'Ready to Work?',
-          heading: "Let's Make Your Accounting Simpler.",
-          description:
-            "Whether you're starting a new business or looking for a more personal accounting experience, I'd be happy to help. Book a free introductory call and let's discuss your business.",
-          backgroundImage: mediaId,
-          button: {
-            label: 'Book a Free Call',
-            type: 'custom' as const,
-            url: '#kontakt',
-          },
+          useGlobal: true,
         },
       ],
     },
@@ -79,7 +92,7 @@ async function seed() {
     data: { slug: '/' },
     draft: false,
   })
-  console.log(`✓ Utworzono stronę "Home" (${page.id}) z blokiem CTA`)
+  console.log(`✓ Utworzono stronę "Home" (${page.id}) z blokiem CTA (globalny)`)
 
   process.exit(0)
 }

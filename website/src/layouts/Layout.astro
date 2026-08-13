@@ -4,6 +4,8 @@ import '../styles/global.css';
 import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import manropeWoff2 from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
 import SEO from './SEO.astro';
+import { getSiteSettings } from '../lib/payload/site-settings';
+import { resolveMediaUrl } from '../lib/payload/media';
 
 interface Props {
   title: string;
@@ -11,9 +13,13 @@ interface Props {
   canonicalUrl?: string | null;
   ogImage?: number | Media | null;
   ogType?: 'website' | 'article';
+  structuredData?: Record<string, unknown>[];
 }
 
-const { title, description, canonicalUrl, ogImage, ogType } = Astro.props;
+const { title, description, canonicalUrl, ogImage, ogType, structuredData } = Astro.props;
+
+const siteSettings = await getSiteSettings();
+const faviconUrl = resolveMediaUrl(siteSettings.favicon);
 ---
 
 <!doctype html>
@@ -21,7 +27,13 @@ const { title, description, canonicalUrl, ogImage, ogType } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {
+      faviconUrl ? (
+        <link rel="icon" href={faviconUrl} />
+      ) : (
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      )
+    }
     <meta name="generator" content={Astro.generator} />
 
     <link rel="preload" as="font" type="font/woff2" href={interWoff2} crossorigin />
@@ -33,6 +45,7 @@ const { title, description, canonicalUrl, ogImage, ogType } = Astro.props;
       canonicalUrl={canonicalUrl}
       ogImage={ogImage}
       ogType={ogType}
+      structuredData={structuredData}
     />
   </head>
   <body class="min-h-screen bg-white font-sans text-navy antialiased has-[header details[open]]:overflow-hidden">
@@ -41,5 +54,27 @@ const { title, description, canonicalUrl, ogImage, ogType } = Astro.props;
       <slot />
     </main>
     <slot name="footer" />
+
+    <script>
+      const revealElements = document.querySelectorAll('[data-reveal]');
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -10% 0px' },
+        );
+
+        revealElements.forEach((el) => observer.observe(el));
+      } else {
+        revealElements.forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
   </body>
 </html>

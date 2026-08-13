@@ -1,0 +1,35 @@
+---
+import type { Page } from '@payload-types';
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/sections/Header/Header.astro';
+import Footer from '../../components/sections/Footer/Footer.astro';
+import CTA from '../../components/sections/CTA/CTA.astro';
+import PageHero from '../../components/sections/PageHero/PageHero.astro';
+import BlogGrid from '../../components/sections/BlogGrid/BlogGrid.astro';
+import { getAllPosts } from '../../lib/payload/posts';
+import { getPageBySlug } from '../../lib/payload/pages';
+import { getSiteSettings } from '../../lib/payload/site-settings';
+
+type PageBlock = NonNullable<Page['content']>[number];
+type CtaBlockData = Extract<PageBlock, { blockType: 'cta' }>;
+
+const posts = await getAllPosts();
+const homePage = await getPageBySlug('/');
+const ctaBlock = homePage?.content?.find((block): block is CtaBlockData => block.blockType === 'cta');
+const siteSettings = await getSiteSettings();
+---
+
+<Layout
+  title={`Blog | ${siteSettings.siteName}`}
+  description="Insights, Ideas, and Practical Solutions — praktyczne porady księgowe dla właścicieli firm."
+>
+  <Header slot="header" />
+
+  <PageHero tagline={siteSettings.blog?.blogTitle || 'Blog'} heading="Insights, Ideas, and Practical Solutions" />
+
+  <BlogGrid posts={posts} postsPerPage={siteSettings.blog?.postsPerPage} />
+
+  {ctaBlock && <CTA {...ctaBlock} />}
+
+  <Footer slot="footer" />
+</Layout>

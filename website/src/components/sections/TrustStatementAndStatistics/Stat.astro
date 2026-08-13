@@ -4,21 +4,34 @@ interface Props {
   suffix?: string | null;
   label: string;
   class?: string;
+  revealDelay?: number;
+  showDivider?: boolean;
 }
 
-const { value, suffix, label, class: className } = Astro.props;
+const { value, suffix, label, class: className, revealDelay = 0, showDivider = false } = Astro.props;
 ---
 
-<div class:list={['flex w-fit max-w-50 flex-col items-start gap-4', className]}>
-  <div class="flex items-center">
-    <p class="font-serif text-[44px] leading-[1.2] tracking-[-1.76px] text-bronze italic sm:text-[64px] sm:tracking-[-2.56px] lg:text-[82px] lg:leading-[98.4px] lg:tracking-[-3.28px]">
-      {value}
-      {suffix && <span class="text-[20px] sm:text-[28px] lg:text-[36px]">{suffix}</span>}
-    </p>
-    <div class="h-10 w-0 shrink-0 bg-navy/10 lg:h-20" />
-  </div>
-  <dt class="sr-only">Statystyka</dt>
-  <dd class="text-[16px] leading-normal text-navy">
-    {label}
+<div
+  data-reveal
+  style={`--reveal-delay: ${revealDelay}ms`}
+  class:list={[
+    'relative flex w-fit max-w-50 flex-col items-start',
+    showDivider &&
+      'lg:before:absolute lg:before:top-1/2 lg:before:left-[-24.75px] lg:before:h-20 lg:before:w-px lg:before:-translate-y-1/2 lg:before:bg-navy/10 lg:before:content-[""]',
+    className,
+  ]}
+>
+  <dt class="sr-only">{label}</dt>
+  <dd class="m-0 flex flex-col items-start gap-4">
+    <div class="flex items-center">
+      <p class="font-serif text-[44px] leading-[1.2] tracking-[-1.76px] text-bronze italic sm:text-[64px] sm:tracking-[-2.56px] lg:text-[82px] lg:leading-[98.4px] lg:tracking-[-3.28px]">
+        <span data-count-to={value}>{value}</span>
+        {suffix && <span class="text-[20px] sm:text-[28px] lg:text-[36px]">{suffix}</span>}
+      </p>
+      <div class="h-10 w-0 shrink-0 bg-navy/10 lg:h-20" aria-hidden="true" />
+    </div>
+    <span class="text-[16px] leading-normal text-navy" aria-hidden="true">
+      {label}
+    </span>
   </dd>
 </div>

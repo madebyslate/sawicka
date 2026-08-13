@@ -3,15 +3,19 @@ import type { Post } from '@payload-types';
 import Heading from '../Heading/Heading.astro';
 import Button from '../Button/Button.astro';
 import { resolveMediaUrl } from '../../../lib/payload/media';
+import { getPostHref } from '../../../lib/payload/posts';
 
 interface Props {
   post: Post;
   class?: string;
+  revealDelay?: number;
+  [dataAttribute: `data-${string}`]: unknown;
 }
 
-const { post, class: className } = Astro.props;
+const { post, class: className, revealDelay, ...rest } = Astro.props;
 
 const categoryName = typeof post.category === 'object' ? post.category?.name : undefined;
+const postHref = getPostHref(post);
 const imageUrl = resolveMediaUrl(post.featuredImage);
 const imageAlt = typeof post.featuredImage === 'object' ? post.featuredImage.alt : '';
 const formattedDate = post.publishedDate
@@ -20,15 +24,38 @@ const formattedDate = post.publishedDate
 ---
 
 <article
-  class:list={['flex w-full flex-col gap-6 rounded-card border-2 border-white bg-card pt-3 px-3 pb-8', className]}
+  {...rest}
+  data-reveal={revealDelay !== undefined ? true : undefined}
+  style={
+    revealDelay !== undefined
+      ? `--reveal-delay: ${revealDelay}ms; --reveal-duration: 0.9s; --reveal-distance: 2rem`
+      : undefined
+  }
+  class:list={[
+    'group relative flex w-full flex-col gap-6 rounded-card border-2 border-white bg-card pt-3 px-3 pb-8',
+    className,
+  ]}
 >
-  {imageUrl && <img src={imageUrl} alt={imageAlt} loading="lazy" class="h-75 w-full rounded-icon object-cover" />}
+  {
+    imageUrl && (
+      <div class="h-75 w-full overflow-hidden rounded-icon">
+        <img
+          src={imageUrl}
+          alt={imageAlt}
+          loading="lazy"
+          class="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-105"
+        />
+      </div>
+    )
+  }
   <div class="flex flex-col gap-6 px-3">
     <div class="flex flex-col">
       <div class="flex flex-col gap-2">
         {categoryName && <p class="text-tagline font-medium text-bronze">{categoryName}</p>}
         <Heading as="h3" class="font-normal" style="line-height: 130%;">
-          {post.title}
+          <a href={postHref} class="after:absolute after:inset-0 after:content-['']">
+            {post.title}
+          </a>
         </Heading>
       </div>
 
@@ -85,10 +112,10 @@ const formattedDate = post.publishedDate
 
       <hr class="mt-6 border-t border-navy/8" />
 
-      {post.excerpt && <p class="mt-6 text-body text-navy/80">{post.excerpt}</p>}
+      {post.excerpt && <p class="mt-6 line-clamp-2 text-body text-navy/80">{post.excerpt}</p>}
     </div>
-    {/* TODO: /blog/[slug] jeszcze nie istnieje — sama strona artykułu to osobne, jeszcze nie zrobione zadanie */}
-    <Button variant="accent" href={`/blog/${post.slug}`} class="self-start">
+    {/* TODO: [category]/[slug] jeszcze nie istnieje — sama strona artykułu to osobne, jeszcze nie zrobione zadanie */}
+    <Button variant="accent" href={postHref} class="relative z-10 self-start">
       Read Article
     </Button>
   </div>

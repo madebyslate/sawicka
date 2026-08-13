@@ -23,10 +23,10 @@ const posts: Post[] =
     : await getLatestPosts(3);
 ---
 
-<Section class="bg-cream">
+<Section id="blog" class="bg-cream">
   <Container>
     <div class="flex w-full flex-col items-start gap-20">
-      <div class="flex w-full flex-col items-start gap-4">
+      <div data-reveal style="--reveal-delay: 0ms" class="flex w-full flex-col items-start gap-4">
         {tagline && <SectionLabel>{tagline}</SectionLabel>}
         <div class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-center lg:justify-between">
           <Heading as="h2" class="font-normal lg:max-w-xl">
@@ -37,7 +37,7 @@ const posts: Post[] =
       </div>
 
       <div class="grid w-full grid-cols-1 gap-4 lg:grid-cols-3">
-        {posts.map((post) => <BlogCard post={post} />)}
+        {posts.map((post, index) => <BlogCard post={post} revealDelay={150 + index * 100} />)}
       </div>
     </div>
   </Container>

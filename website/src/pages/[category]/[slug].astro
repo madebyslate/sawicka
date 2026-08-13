@@ -1,0 +1,246 @@
+---
+import type { Page } from '@payload-types';
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/sections/Header/Header.astro';
+import Footer from '../../components/sections/Footer/Footer.astro';
+import CTA from '../../components/sections/CTA/CTA.astro';
+import PostHero from '../../components/sections/PostHero/PostHero.astro';
+import Section from '../../components/ui/Section/Section.astro';
+import Container from '../../components/ui/Container/Container.astro';
+import Heading from '../../components/ui/Heading/Heading.astro';
+import Button from '../../components/ui/Button/Button.astro';
+import AccordionItem from '../../components/ui/AccordionItem/AccordionItem.astro';
+import { getAllPosts, getPostBySlug, getPostHref } from '../../lib/payload/posts';
+import { getPageBySlug } from '../../lib/payload/pages';
+import { getSiteSettings } from '../../lib/payload/site-settings';
+import { resolveMediaUrl } from '../../lib/payload/media';
+import { lexicalToHtml, getH2Headings, getPlainText } from '../../lib/payload/richText';
+
+type PageBlock = NonNullable<Page['content']>[number];
+type CtaBlockData = Extract<PageBlock, { blockType: 'cta' }>;
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return posts
+    .filter((post) => typeof post.category === 'object' && post.category?.slug)
+    .map((post) => ({
+      params: {
+        category: typeof post.category === 'object' ? post.category!.slug : '',
+        slug: post.slug,
+      },
+    }));
+}
+
+const { slug } = Astro.params;
+const post = await getPostBySlug(slug);
+
+if (!post) {
+  throw new Error(`Nie znaleziono wpisu o slugu "${slug}" (getPostBySlug zwrócił null).`);
+}
+
+const categoryName = typeof post.category === 'object' ? post.category?.name : undefined;
+const categorySlug = typeof post.category === 'object' ? post.category?.slug : undefined;
+const imageUrl = resolveMediaUrl(post.featuredImage);
+const imageAlt = typeof post.featuredImage === 'object' ? post.featuredImage.alt : '';
+const formattedDate = post.publishedDate
+  ? new Date(post.publishedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  : '';
+const contentHtml = lexicalToHtml(post.content);
+const headings = getH2Headings(post.content);
+
+const homePage = await getPageBySlug('/');
+const ctaBlock = homePage?.content?.find((block): block is CtaBlockData => block.blockType === 'cta');
+const siteSettings = await getSiteSettings();
+
+const postUrl = new URL(getPostHref(post), Astro.site).toString();
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: Astro.site?.toString(),
+    },
+    ...(categorySlug
+      ? [
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: categoryName,
+            item: new URL(`/${categorySlug}`, Astro.site).toString(),
+          },
+        ]
+      : []),
+    {
+      '@type': 'ListItem',
+      position: categorySlug ? 3 : 2,
+      name: post.title,
+      item: postUrl,
+    },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  description: post.metaDescription || post.excerpt || undefined,
+  image: imageUrl ? [imageUrl] : undefined,
+  articleBody: getPlainText(post.content) || undefined,
+  datePublished: post.publishedDate || post.createdAt,
+  dateModified: post.updatedAt,
+  author: { '@type': 'Organization', name: siteSettings.siteName },
+  publisher: { '@type': 'Organization', name: siteSettings.siteName },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
+};
+
+const faqs = (post.faqs ?? []).filter((faq) => faq.question && faq.answer);
+
+const faqSchema =
+  faqs.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map((faq) => ({
+          '@type': 'Question',
+          name: faq.question,
+          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+        })),
+      }
+    : null;
+
+const schemas = [breadcrumbSchema, articleSchema, ...(faqSchema ? [faqSchema] : [])];
+---
+
+<Layout
+  title={`${post.title} | ${siteSettings.siteName}`}
+  description={post.metaDescription || post.excerpt || siteSettings.tagline || siteSettings.siteName}
+  canonicalUrl={post.canonicalUrl}
+  ogImage={post.ogImage || post.featuredImage}
+  ogType="article"
+  structuredData={schemas}
+>
+  <div
+    data-reading-progress
+    style="transform: scaleX(0)"
+    class="fixed inset-x-0 top-0 z-50 h-1 origin-left bg-linear-to-r from-gold to-bronze motion-safe:transition-transform motion-safe:duration-150 motion-safe:ease-out"
+  >
+  </div>
+
+  <Header slot="header" />
+
+  <PostHero heading={post.title} category={categoryName} date={formattedDate} readTime={post.readTime} />
+
+  <Section class="bg-cream">
+    <Container>
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-4">
+        <article data-article class="flex flex-col gap-8 lg:col-span-2">
+          {imageUrl && <img src={imageUrl} alt={imageAlt} class="h-130.5 w-full rounded-card object-cover" />}
+
+          {
+            contentHtml ? (
+              <div class="post-content" set:html={contentHtml} />
+            ) : (
+              post.excerpt && <p class="text-body text-navy/80">{post.excerpt}</p>
+            )
+          }
+
+          {faqs.length > 0 && (
+            <div class="flex flex-col gap-2 border-t border-navy/8 pt-8">
+              <Heading as="h2" class="font-normal">
+                Frequently Asked Questions
+              </Heading>
+              <div>
+                {faqs.map((faq) => (
+                  <AccordionItem question={faq.question}>{faq.answer}</AccordionItem>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {categorySlug && (
+            <Button variant="accent" href={`/${categorySlug}`} class="self-start">
+              Back
+            </Button>
+          )}
+        </article>
+
+        {headings.length > 0 && (
+          <aside class="lg:col-span-1">
+            <div class="flex flex-col gap-4 rounded-card border-2 border-white bg-card p-6 lg:sticky lg:top-8">
+              <Heading as="h3" class="font-normal">
+                Table of Contents
+              </Heading>
+              <ol class="flex flex-col gap-2 pl-6 text-body text-navy/80" data-toc>
+                {headings.map((item) => (
+                  <li class="list-decimal">
+                    <a href={`#${item.id}`} data-toc-link class="toc-link">
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </aside>
+        )}
+      </div>
+    </Container>
+  </Section>
+
+  {ctaBlock && <CTA {...ctaBlock} />}
+
+  <Footer slot="footer" />
+</Layout>
+
+<script>
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+  if (tocLinks.length > 0 && 'IntersectionObserver' in window) {
+    const headingsById = new Map<string, HTMLAnchorElement>();
+    tocLinks.forEach((link) => {
+      const id = link.getAttribute('href')?.slice(1);
+      if (id) headingsById.set(id, link);
+    });
+
+    const setActive = (id: string) => {
+      tocLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visible.length > 0) {
+          setActive(visible[0].target.id);
+        }
+      },
+      { rootMargin: '-96px 0px -70% 0px', threshold: 0 },
+    );
+
+    headingsById.forEach((_link, id) => {
+      const heading = document.getElementById(id);
+      if (heading) observer.observe(heading);
+    });
+  }
+
+  const article = document.querySelector<HTMLElement>('[data-article]');
+  const progressBar = document.querySelector<HTMLElement>('[data-reading-progress]');
+
+  if (article && progressBar) {
+    const updateProgress = () => {
+      const rect = article.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const scrolled = -rect.top;
+      const progress = total > 0 ? Math.min(Math.max(scrolled / total, 0), 1) : 0;
+      progressBar.style.transform = `scaleX(${progress})`;
+    };
+
+    updateProgress();
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+  }
+</script>

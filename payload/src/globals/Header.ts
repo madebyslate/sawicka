@@ -17,6 +17,24 @@ export const Header: GlobalConfig = {
   },
   fields: [
     {
+      name: 'logo',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Logo',
+      admin: {
+        description: 'Logo w nagłówku strony. Jeśli puste, używane jest domyślne logo z kodu.',
+      },
+    },
+    {
+      name: 'logoLink',
+      type: 'text',
+      label: 'Link pod logo',
+      defaultValue: '/',
+      admin: {
+        description: 'Adres, na który przechodzi kliknięcie w logo. Domyślnie strona główna ("/").',
+      },
+    },
+    {
       name: 'mainMenu',
       type: 'relationship',
       relationTo: 'menu',

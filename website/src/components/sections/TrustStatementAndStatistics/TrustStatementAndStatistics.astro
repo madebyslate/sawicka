@@ -20,10 +20,14 @@ interface Props {
 const { tagline, heading, stats } = Astro.props;
 ---
 
-<Section class="bg-cream">
+<Section id="trust-statement" class="bg-cream">
   <Container>
     <div class="flex w-full flex-col items-start gap-20">
-      <div class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-start lg:justify-between">
+      <div
+        data-reveal
+        style="--reveal-delay: 0ms"
+        class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-start lg:justify-between"
+      >
         <Heading as="h2" class="lg:max-w-3xl">
           {heading}
         </Heading>
@@ -33,13 +37,57 @@ const { tagline, heading, stats } = Astro.props;
       <dl class="grid w-full grid-cols-2 gap-x-8 gap-y-10 lg:flex lg:items-center lg:justify-end lg:gap-x-[49.5px]">
         {
           (stats ?? []).map((stat, index) => (
-            <>
-              {index > 0 && <div class="hidden h-20 w-px shrink-0 bg-navy/10 lg:block" />}
-              <Stat value={stat.value} suffix={stat.suffix} label={stat.label} />
-            </>
+            <Stat
+              value={stat.value}
+              suffix={stat.suffix}
+              label={stat.label}
+              revealDelay={150 + index * 100}
+              showDivider={index > 0}
+            />
           ))
         }
       </dl>
     </div>
   </Container>
 </Section>
+
+<script>
+  const counters = document.querySelectorAll<HTMLElement>('[data-count-to]');
+
+  counters.forEach((el) => {
+    const target = Number(el.getAttribute('data-count-to'));
+    if (!Number.isFinite(target)) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!('IntersectionObserver' in window) || prefersReducedMotion) {
+      el.textContent = String(target);
+      return;
+    }
+
+    el.textContent = '0';
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          observer.unobserve(entry.target);
+
+          const duration = 1500;
+          const start = performance.now();
+
+          const step = (now: number) => {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = String(Math.round(eased * target));
+            if (progress < 1) requestAnimationFrame(step);
+          };
+
+          requestAnimationFrame(step);
+        });
+      },
+      { threshold: 0.3 },
+    );
+
+    observer.observe(el);
+  });
+</script>

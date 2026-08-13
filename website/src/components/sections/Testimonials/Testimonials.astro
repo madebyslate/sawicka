@@ -28,7 +28,11 @@ const hasMultiple = testimonials.length > 1;
 <Section class="bg-cream">
   <Container>
     <div class="flex w-full flex-col items-start gap-20">
-      <div class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-start lg:gap-80.25">
+      <div
+        data-reveal
+        style="--reveal-delay: 0ms"
+        class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-start lg:gap-80.25"
+      >
         {tagline && <SectionLabel class="shrink-0">{tagline}</SectionLabel>}
         <Heading as="h2" class="lg:max-w-2xl">
           {heading}
@@ -39,6 +43,8 @@ const hasMultiple = testimonials.length > 1;
         testimonials.length > 0 && (
           <div
             data-testimonials-root
+            data-reveal
+            style="--reveal-delay: 150ms"
             class="flex w-full flex-col items-center gap-8 lg:flex-row lg:items-end lg:justify-between"
           >
             {hasMultiple && (

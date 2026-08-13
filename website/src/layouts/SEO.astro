@@ -9,9 +9,10 @@ interface Props {
   canonicalUrl?: string | null;
   ogImage?: number | Media | null;
   ogType?: 'website' | 'article';
+  structuredData?: Record<string, unknown>[];
 }
 
-const { title, description, canonicalUrl, ogImage, ogType = 'website' } = Astro.props;
+const { title, description, canonicalUrl, ogImage, ogType = 'website', structuredData } = Astro.props;
 
 const canonical = canonicalUrl || new URL(Astro.url.pathname, Astro.site).toString();
 const ogImageUrl = resolveMediaUrl(ogImage);
@@ -92,3 +93,8 @@ const organizationSchema = {
 {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 
 <script type="application/ld+json" is:inline set:html={JSON.stringify(organizationSchema)} />
+{
+  structuredData?.map((schema) => (
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+  ))
+}

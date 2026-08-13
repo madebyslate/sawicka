@@ -11,6 +11,7 @@ import PersonalRelationship from '@sections/PersonalRelationship/PersonalRelatio
 import Services from '@sections/Services/Services.astro';
 import PainPoints from '@sections/PainPoints/PainPoints.astro';
 import TrustStatementAndStatistics from '@sections/TrustStatementAndStatistics/TrustStatementAndStatistics.astro';
+import TextPage from '@sections/TextPage/TextPage.astro';
 
 type Blocks = NonNullable<Page['content']>;
 
@@ -46,6 +47,8 @@ const { blocks } = Astro.props;
         return <Faq {...block} />;
       case 'cta':
         return <CTA {...block} />;
+      case 'textPage':
+        return <TextPage {...block} />;
       default:
         return null;
     }

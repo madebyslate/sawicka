@@ -101,11 +101,13 @@ export interface Config {
     'site-settings': SiteSetting;
     header: Header;
     footer: Footer;
+    'global-cta': GlobalCta;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'global-cta': GlobalCtaSelect<false> | GlobalCtaSelect<true>;
   };
   locale: null;
   widgets: {
@@ -215,7 +217,7 @@ export interface Page {
   /**
    * Określa TYLKO początkową zawartość przy tworzeniu strony — bloki nadal można dowolnie dodawać, usuwać, edytować i przestawiać. Wybór nie ma żadnego wpływu później (nic się nie synchronizuje ani nie nadpisuje).
    */
-  template?: ('homepage' | 'blank') | null;
+  template?: ('homepage' | 'text-page' | 'blank') | null;
   content?:
     | (
         | {
@@ -481,14 +483,18 @@ export interface Page {
             blockType: 'faq';
           }
         | {
+            /**
+             * Domyślnie ta sekcja pokazuje treść ustawioną w Ustawienia → CTA (globalny). Odznacz, żeby ustawić inną treść tylko dla tej strony.
+             */
+            useGlobal?: boolean | null;
             eyebrow?: string | null;
-            heading: string;
+            heading?: string | null;
             description?: string | null;
             /**
              * Niewymagane na poziomie zapisu (żeby dało się utworzyć stronę z szablonu bez realnego zdjęcia) — Astro renderuje sekcję poprawnie też bez niego.
              */
             backgroundImage?: (number | null) | Media;
-            button: {
+            button?: {
               label: string;
               type?: ('reference' | 'custom') | null;
               reference?:
@@ -505,6 +511,28 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'cta';
+          }
+        | {
+            tagline?: string | null;
+            heading: string;
+            content?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textPage';
           }
       )[]
     | null;
@@ -566,6 +594,13 @@ export interface Post {
     };
     [k: string]: unknown;
   } | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
   /**
    * Tytuł wpisu widoczny publicznie. Pojawia się w pasku tytułu przeglądarki oraz w wynikach wyszukiwania.
    */
@@ -599,6 +634,12 @@ export interface Post {
  */
 export interface Category {
   id: number;
+  heading?: string | null;
+  description?: string | null;
+  /**
+   * Nazwa używana tylko w panelu administracyjnym. Nie wyświetla się na stronie.
+   */
+  internalName?: string | null;
   name: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -1022,6 +1063,7 @@ export interface PagesSelect<T extends boolean = true> {
         cta?:
           | T
           | {
+              useGlobal?: T;
               eyebrow?: T;
               heading?: T;
               description?: T;
@@ -1034,6 +1076,15 @@ export interface PagesSelect<T extends boolean = true> {
                     reference?: T;
                     url?: T;
                   };
+              id?: T;
+              blockName?: T;
+            };
+        textPage?:
+          | T
+          | {
+              tagline?: T;
+              heading?: T;
+              content?: T;
               id?: T;
               blockName?: T;
             };
@@ -1060,6 +1111,13 @@ export interface PostsSelect<T extends boolean = true> {
   publishedDate?: T;
   readTime?: T;
   content?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
   title?: T;
   generateSlug?: T;
   slug?: T;
@@ -1074,6 +1132,9 @@ export interface PostsSelect<T extends boolean = true> {
  * via the `definition` "categories_select".
  */
 export interface CategoriesSelect<T extends boolean = true> {
+  heading?: T;
+  description?: T;
+  internalName?: T;
   name?: T;
   generateSlug?: T;
   slug?: T;
@@ -1150,6 +1211,20 @@ export interface SiteSetting {
    * Domyślny meta description, gdy konkretna podstrona nie ma własnego opisu. Zasila też pola "slogan"/"description" w danych strukturalnych (JSON-LD) w zakładce Organization.
    */
   tagline?: string | null;
+  /**
+   * Ikona wyświetlana w karcie przeglądarki. Zalecany kwadratowy PNG lub SVG.
+   */
+  favicon?: (number | null) | Media;
+  blog?: {
+    /**
+     * Wyświetlany jako tagline nad nagłówkiem na liście wpisów (/blog) oraz na stronach kategorii.
+     */
+    blogTitle?: string | null;
+    /**
+     * Ile wpisów pokazuje się od razu na /blog i na stronach kategorii, zanim trzeba kliknąć "Load More".
+     */
+    postsPerPage?: number | null;
+  };
   organization?: {
     /**
      * Używane w JSON-LD organizacji (schema.org "logo"). Zalecany kwadratowy/poziomy PNG lub SVG na jasnym tle.
@@ -1228,6 +1303,14 @@ export interface SiteSetting {
  */
 export interface Header {
   id: number;
+  /**
+   * Logo w nagłówku strony. Jeśli puste, używane jest domyślne logo z kodu.
+   */
+  logo?: (number | null) | Media;
+  /**
+   * Adres, na który przechodzi kliknięcie w logo. Domyślnie strona główna ("/").
+   */
+  logoLink?: string | null;
   mainMenu?: (number | null) | Menu;
   cta: {
     label: string;
@@ -1283,12 +1366,48 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
+ * Domyślna treść bloku CTA — używana wszędzie tam, gdzie blok CTA na stronie ma włączone "Użyj globalnych ustawień".
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "global-cta".
+ */
+export interface GlobalCta {
+  id: number;
+  eyebrow?: string | null;
+  heading: string;
+  description?: string | null;
+  backgroundImage?: (number | null) | Media;
+  button: {
+    label: string;
+    type?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
   siteName?: T;
   tagline?: T;
+  favicon?: T;
+  blog?:
+    | T
+    | {
+        blogTitle?: T;
+        postsPerPage?: T;
+      };
   organization?:
     | T
     | {
@@ -1338,6 +1457,8 @@ export interface SiteSettingsSelect<T extends boolean = true> {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
+  logo?: T;
+  logoLink?: T;
   mainMenu?: T;
   cta?:
     | T
@@ -1393,6 +1514,27 @@ export interface FooterSelect<T extends boolean = true> {
       };
   copyrightText?: T;
   legalMenu?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "global-cta_select".
+ */
+export interface GlobalCtaSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heading?: T;
+  description?: T;
+  backgroundImage?: T;
+  button?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -27,10 +27,14 @@ const imageUrl = resolveMediaUrl(image);
 const imageAlt = image && typeof image === 'object' ? image.alt : '';
 ---
 
-<Section class="bg-navy pt-25 pb-30">
+<Section id="how-we-work" class="bg-navy pt-25 pb-30">
   <Container>
     <div class="flex w-full flex-col items-start gap-20">
-      <div class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-4 lg:self-stretch">
+      <div
+        data-reveal
+        style="--reveal-delay: 0ms"
+        class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-4 lg:self-stretch"
+      >
         <div class="flex flex-col items-start gap-4 lg:max-w-2xl">
           {tagline && <SectionLabel tone="light" class="pt-3.5">{tagline}</SectionLabel>}
           <Heading as="h2" class="text-white">
@@ -50,8 +54,8 @@ const imageAlt = image && typeof image === 'object' ? image.alt : '';
           />
         )}
         <div class="flex w-full flex-col items-start lg:w-163">
-          {(steps ?? []).map((item) => (
-            <StepItem step={item.step} title={item.title}>
+          {(steps ?? []).map((item, index) => (
+            <StepItem step={item.step} title={item.title} revealDelay={index * 100}>
               {item.description}
             </StepItem>
           ))}

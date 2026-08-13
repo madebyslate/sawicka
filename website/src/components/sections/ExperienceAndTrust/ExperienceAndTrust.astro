@@ -42,6 +42,8 @@ const portraitAlt = portrait && typeof portrait === 'object' ? portrait.alt : ''
   <Container>
     <div class="flex w-full flex-col items-start gap-20">
       <div
+        data-reveal
+        style="--reveal-delay: 0ms"
         class="flex w-full flex-col items-start gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-4 lg:self-stretch"
       >
         {tagline && <SectionLabel class="shrink-0 pt-3.5">{tagline}</SectionLabel>}
@@ -52,6 +54,8 @@ const portraitAlt = portrait && typeof portrait === 'object' ? portrait.alt : ''
 
       <div class="flex w-full flex-col items-start gap-8.75">
         <div
+          data-reveal
+          style="--reveal-delay: 150ms"
           class="flex w-full flex-col items-start gap-8 lg:flex-row lg:items-stretch lg:justify-between lg:gap-4 lg:self-stretch"
         >
           {portraitUrl && (
@@ -95,7 +99,7 @@ const portraitAlt = portrait && typeof portrait === 'object' ? portrait.alt : ''
         </div>
 
         {quote && (
-          <div class="flex items-start gap-4 lg:w-135.25">
+          <div data-reveal style="--reveal-delay: 300ms" class="flex items-start gap-4 lg:w-135.25">
             <Icon src="/icons/quote.svg" alt="" size={40} class="-mt-2.25 shrink-0" />
             <p class="text-body text-navy">{quote}</p>
           </div>

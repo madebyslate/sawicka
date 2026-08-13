@@ -1,26 +1,42 @@
 import { getPayload } from 'payload'
 import config from '../payload.config'
 
-function link(label: string) {
-  return { label, type: 'custom' as const, url: '#' }
+function link(label: string, url: string) {
+  return { label, type: 'custom' as const, url }
 }
+
+const sectionLinks = () => [
+  link('Services', '/#services'),
+  link('About', '/#about'),
+  link('How We Work', '/#how-we-work'),
+  link('Blog', '/blog'),
+  link('Contact', '/#kontakt'),
+]
 
 const menus = [
   {
     name: 'Header',
-    items: [link('Services'), link('About'), link('How We Work'), link('Blog'), link('Contact')],
+    items: sectionLinks(),
   },
   {
     name: 'Quick Links',
-    items: [link('Services'), link('About'), link('How We Work'), link('Blog'), link('Contact')],
+    items: sectionLinks(),
   },
   {
     name: 'Services',
-    items: [link('Accounting'), link('HR & Payroll'), link('Business Advisory & Company Setup')],
+    items: [
+      link('Accounting', '/#services'),
+      link('HR & Payroll', '/#services'),
+      link('Business Advisory & Company Setup', '/#services'),
+    ],
   },
   {
     name: 'Social Media',
-    items: [link('Instagram'), link('Whatsapp'), link('Facebook'), link('Youtube')],
+    items: [link('Instagram', '#'), link('Whatsapp', '#'), link('Facebook', '#'), link('Youtube', '#')],
+  },
+  {
+    name: 'Footer Links',
+    items: [link('Privacy Policy', '/privacy-policy'), link('Terms & Conditions', '/terms-and-conditions')],
   },
 ] as const
 
@@ -39,7 +55,10 @@ async function seed() {
       const doc = existing.docs[0]
       idsByName[menu.name] = doc.id
 
-      const isStaleShape = (doc.items ?? []).some((item) => !('type' in item) || !item.type)
+      const existingItems = doc.items ?? []
+      const isStaleShape =
+        existingItems.length !== menu.items.length ||
+        existingItems.some((item, index) => !('type' in item) || !item.type || item.url !== menu.items[index]?.url)
       if (isStaleShape) {
         await payload.update({
           collection: 'menu',
@@ -97,6 +116,33 @@ async function seed() {
     console.log('✓ Podpięto Footer.linkColumns')
   } else {
     console.log('↷ Footer.linkColumns już ustawione — pomijam')
+  }
+
+  if (!footer.legalMenu) {
+    await payload.updateGlobal({
+      slug: 'footer',
+      data: { legalMenu: idsByName['Footer Links'] },
+    })
+    console.log('✓ Podpięto Footer.legalMenu')
+  } else {
+    console.log('↷ Footer.legalMenu już ustawione — pomijam')
+  }
+
+  if (!footer.contact?.email?.value) {
+    await payload.updateGlobal({
+      slug: 'footer',
+      data: {
+        contact: {
+          address: { label: 'Address', value: '4517 Washington Ave.\nManchester, 39495' },
+          phone: { label: 'Phone', value: '(+48) 039 1038 0339' },
+          email: { label: 'Email', value: 'hello@sawickagrzyb.pl' },
+          hours: { label: 'Hours', value: 'Monday - Friday,\n9 AM - 5 PM' },
+        },
+      },
+    })
+    console.log('✓ Podpięto Footer.contact')
+  } else {
+    console.log('↷ Footer.contact już ustawione — pomijam')
   }
 
   process.exit(0)

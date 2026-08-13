@@ -20,6 +20,9 @@ const seeds = [
   'seedMenus.ts',
   'seedCategories.ts',
   'seedBlog.ts',
+  'seedPostContent.ts',
+  'seedTextPages.ts',
+  'seedReorderHome.ts',
 ]
 
 async function runSeed(file: string) {

@@ -1,0 +1,56 @@
+---
+import type { Page } from '@payload-types';
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/sections/Header/Header.astro';
+import Footer from '../../components/sections/Footer/Footer.astro';
+import CTA from '../../components/sections/CTA/CTA.astro';
+import PageHero from '../../components/sections/PageHero/PageHero.astro';
+import BlogGrid from '../../components/sections/BlogGrid/BlogGrid.astro';
+import { getAllCategories, getCategoryBySlug } from '../../lib/payload/categories';
+import { getPostsByCategory } from '../../lib/payload/posts';
+import { getPageBySlug } from '../../lib/payload/pages';
+import { getSiteSettings } from '../../lib/payload/site-settings';
+
+type PageBlock = NonNullable<Page['content']>[number];
+type CtaBlockData = Extract<PageBlock, { blockType: 'cta' }>;
+
+export async function getStaticPaths() {
+  const categories = await getAllCategories();
+  return categories.map((category) => ({
+    params: { category: category.slug },
+  }));
+}
+
+const { category: categorySlug } = Astro.params;
+const category = await getCategoryBySlug(categorySlug);
+
+if (!category) {
+  throw new Error(`Nie znaleziono kategorii o slugu "${categorySlug}" (getCategoryBySlug zwrócił null).`);
+}
+
+const posts = await getPostsByCategory(category.id);
+const homePage = await getPageBySlug('/');
+const ctaBlock = homePage?.content?.find((block): block is CtaBlockData => block.blockType === 'cta');
+const siteSettings = await getSiteSettings();
+---
+
+<Layout
+  title={`${category.name} | Blog | ${siteSettings.siteName}`}
+  description={category.metaDescription || `Artykuły z kategorii ${category.name}.`}
+  canonicalUrl={category.canonicalUrl}
+  ogImage={category.ogImage}
+>
+  <Header slot="header" />
+
+  <PageHero
+    tagline={siteSettings.blog?.blogTitle || 'Blog'}
+    heading={category.heading || category.name}
+    description={category.description}
+  />
+
+  <BlogGrid posts={posts} postsPerPage={siteSettings.blog?.postsPerPage} />
+
+  {ctaBlock && <CTA {...ctaBlock} />}
+
+  <Footer slot="footer" />
+</Layout>

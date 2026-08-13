@@ -3,6 +3,7 @@ import type { Media } from '@payload-types';
 import Container from '../../ui/Container/Container.astro';
 import Section from '../../ui/Section/Section.astro';
 import Heading from '../../ui/Heading/Heading.astro';
+import SectionLabel from '../../ui/SectionLabel/SectionLabel.astro';
 import Button from '../../ui/Button/Button.astro';
 import IconFeatureCard from '../../ui/IconFeatureCard/IconFeatureCard.astro';
 import { resolveMediaUrl } from '../../../lib/payload/media';
@@ -38,13 +39,12 @@ const rightColumn = (painPoints ?? []).filter((_, index) => index % 2 === 1);
   <Container>
     <div class="flex flex-col items-center gap-20">
       <div class="flex w-full flex-col items-start gap-20">
-        <div class="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,429px)_minmax(0,668px)] lg:gap-x-4">
-          {tagline && (
-            <p class="text-[14px] font-medium uppercase text-[#030F22] opacity-80"
-               style="font-family: Manrope, sans-serif; line-height: normal;">
-              {tagline}
-            </p>
-          )}
+        <div
+          data-reveal
+          style="--reveal-delay: 0ms"
+          class="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,429px)_minmax(0,668px)] lg:gap-x-4"
+        >
+          {tagline && <SectionLabel>{tagline}</SectionLabel>}
           <div>
             <Heading
               as="h2"
@@ -62,7 +62,11 @@ const rightColumn = (painPoints ?? []).filter((_, index) => index % 2 === 1);
           </div>
         </div>
 
-        <div class="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,429px)_minmax(0,430px)_minmax(0,429px)]">
+        <div
+          data-reveal
+          style="--reveal-delay: 150ms"
+          class="grid w-full grid-cols-1 gap-4 lg:grid-cols-[minmax(0,429px)_minmax(0,430px)_minmax(0,429px)]"
+        >
           <div class="flex h-full flex-col gap-4">
             {leftColumn.map((item) => (
               <div class="flex-1 min-h-0">
@@ -88,7 +92,11 @@ const rightColumn = (painPoints ?? []).filter((_, index) => index % 2 === 1);
       </div>
 
       {(closingText || button) && (
-        <div class="flex w-full max-w-[589px] flex-col items-center gap-6 text-center">
+        <div
+          data-reveal
+          style="--reveal-delay: 300ms"
+          class="flex w-full max-w-[589px] flex-col items-center gap-6 text-center"
+        >
           {closingText && (
             <p class="text-[16px] leading-[160%] text-[#030F22] opacity-80"
                style="font-family: Inter, sans-serif;">

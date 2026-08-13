@@ -1,0 +1,63 @@
+---
+import Container from '../../ui/Container/Container.astro';
+import Heading from '../../ui/Heading/Heading.astro';
+import GridLines from '../../ui/GridLines/GridLines.astro';
+import noiseTexture from '../../../assets/sections/hero/noise-texture.png';
+import { noiseBackgroundImage } from '../../../lib/noiseBackground';
+
+interface Props {
+  tagline?: string | null;
+  heading: string;
+  description?: string | null;
+}
+
+const { tagline, heading, description } = Astro.props;
+---
+
+<section
+  class="relative isolate flex h-121.25 items-center overflow-hidden"
+  style="background: linear-gradient(180deg, #030F22 0%, #14243D 100%);"
+>
+  <div
+    class="pointer-events-none absolute z-[-15] rounded-full mix-blend-lighten"
+    style="left: 15%; top: 55%; width: 70%; height: 100%; background: #8D96A5; opacity: 0.4; filter: blur(140px);"
+  >
+  </div>
+
+  <div
+    class="pointer-events-none absolute inset-0 -z-15 opacity-[0.32] mix-blend-soft-light"
+    style={`background-image: url(${noiseTexture.src}); background-repeat: repeat;`}
+  >
+  </div>
+
+  <GridLines gap={180} offset={60} />
+
+  <Container class="relative flex flex-col items-center gap-4 pt-25.75 text-center">
+    {tagline && (
+      <span
+        data-reveal
+        style="--reveal-delay: 0ms"
+        class="inline-flex items-center rounded-pill bg-linear-to-r from-gold to-bronze px-3 py-1.5 text-tagline tracking-tagline font-medium text-navy"
+      >
+        {tagline}
+      </span>
+    )}
+    <Heading
+      as="h1"
+      data-reveal
+      style="--reveal-delay: 150ms; --reveal-duration: 1.1s; --reveal-distance: 2.5rem"
+      class="max-w-3xl text-white"
+    >
+      {heading}
+    </Heading>
+    {description && (
+      <p
+        data-reveal
+        style="--reveal-delay: 250ms"
+        class="max-w-xl text-body text-white/80"
+      >
+        {description}
+      </p>
+    )}
+  </Container>
+</section>

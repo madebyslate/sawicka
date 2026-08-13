@@ -24,8 +24,9 @@ export function resolveLinkHref(link: LinkLike | null | undefined): string {
         return slug === '/' ? '/' : `/${slug}`;
       }
       case 'posts': {
-        const slug = (value as Post).slug;
-        return `/blog/${slug}`;
+        const post = value as Post;
+        const categorySlug = typeof post.category === 'object' ? post.category?.slug : undefined;
+        return categorySlug ? `/${categorySlug}/${post.slug}` : `/blog/${post.slug}`;
       }
       default:
         return '#';

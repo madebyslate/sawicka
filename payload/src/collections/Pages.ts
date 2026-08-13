@@ -13,6 +13,7 @@ import { PersonalRelationshipBlock } from '../blocks/PersonalRelationshipBlock'
 import { ServicesBlock } from '../blocks/ServicesBlock'
 import { PainPointsBlock } from '../blocks/PainPointsBlock'
 import { TrustStatementAndStatisticsBlock } from '../blocks/TrustStatementAndStatisticsBlock'
+import { TextPageBlock } from '../blocks/TextPageBlock'
 import { seoFields } from '../fields/seoFields'
 import { pageTemplates } from '../templates/pageTemplates'
 import { applyPageTemplate } from '../hooks/applyPageTemplate'
@@ -38,6 +39,12 @@ export const Pages: CollectionConfig = {
     group: 'Treść',
     useAsTitle: 'internalName',
     defaultColumns: ['internalName', 'slug', 'updatedAt'],
+    preview: (doc) => {
+      const slug = doc.slug as string | undefined
+      if (!slug) return null
+      const baseUrl = process.env.PUBLIC_FRONTEND_URL || ''
+      return slug === '/' ? baseUrl || '/' : `${baseUrl}/${slug}`
+    },
   },
   fields: [
     {
@@ -80,6 +87,7 @@ export const Pages: CollectionConfig = {
         BlogBlock,
         FaqBlock,
         CTABlock,
+        TextPageBlock,
       ],
     },
     {

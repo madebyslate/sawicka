@@ -254,6 +254,18 @@ export const pageTemplates: PageTemplateDefinition[] = [
     ],
   },
   {
+    label: 'Text Page',
+    value: 'text-page',
+    getInitialContent: () => [
+      {
+        blockType: 'textPage',
+        tagline: 'Legal',
+        heading: 'Privacy Policy',
+        // content (richText) — celowo pominięte, uzupełnia się bezpośrednio w edytorze.
+      },
+    ],
+  },
+  {
     label: 'Blank',
     value: 'blank',
     getInitialContent: () => [],

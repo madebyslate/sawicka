@@ -40,6 +40,40 @@ export const SiteSettings: GlobalConfig = {
                   'Domyślny meta description, gdy konkretna podstrona nie ma własnego opisu. Zasila też pola "slogan"/"description" w danych strukturalnych (JSON-LD) w zakładce Organization.',
               },
             },
+            {
+              name: 'favicon',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Favicon',
+              admin: {
+                description: 'Ikona wyświetlana w karcie przeglądarki. Zalecany kwadratowy PNG lub SVG.',
+              },
+            },
+          ],
+        },
+        {
+          name: 'blog',
+          label: 'Blog',
+          fields: [
+            {
+              name: 'blogTitle',
+              type: 'text',
+              label: 'Tytuł bloga',
+              admin: {
+                description:
+                  'Wyświetlany jako tagline nad nagłówkiem na liście wpisów (/blog) oraz na stronach kategorii.',
+              },
+            },
+            {
+              name: 'postsPerPage',
+              type: 'number',
+              label: 'Liczba wpisów widocznych na starcie listingu',
+              min: 1,
+              admin: {
+                description:
+                  'Ile wpisów pokazuje się od razu na /blog i na stronach kategorii, zanim trzeba kliknąć "Load More".',
+              },
+            },
           ],
         },
         {

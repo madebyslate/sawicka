@@ -22,10 +22,29 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     group: 'Treść',
-    useAsTitle: 'name',
-    defaultColumns: ['name', 'slug', 'updatedAt'],
+    useAsTitle: 'internalName',
+    defaultColumns: ['internalName', 'name', 'slug', 'updatedAt'],
   },
   fields: [
+    {
+      name: 'heading',
+      type: 'text',
+      label: 'Nagłówek',
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+      label: 'Description',
+    },
+    {
+      name: 'internalName',
+      type: 'text',
+      label: 'Internal page name',
+      admin: {
+        position: 'sidebar',
+        description: 'Nazwa używana tylko w panelu administracyjnym. Nie wyświetla się na stronie.',
+      },
+    },
     {
       name: 'name',
       type: 'text',

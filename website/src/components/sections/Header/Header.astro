@@ -2,25 +2,37 @@
 import Container from '../../ui/Container/Container.astro';
 import Image from '../../ui/Image/Image.astro';
 import Button from '../../ui/Button/Button.astro';
-import logo from '../../../assets/footer/logo.png';
+import defaultLogo from '../../../assets/footer/logo.png';
 import { getHeader } from '../../../lib/payload/header';
 import { getMenuItems } from '../../../lib/payload/menu';
 import { resolveLinkHref } from '../../../lib/payload/link';
+import { resolveMediaUrl } from '../../../lib/payload/media';
 
 const header = await getHeader();
 const navLinks = getMenuItems(header.mainMenu);
 const ctaHref = resolveLinkHref(header.cta);
+const logoUrl = resolveMediaUrl(header.logo);
+const logoAlt = header.logo && typeof header.logo === 'object' ? header.logo.alt : 'Sawicka Grzyb';
+const logoHref = header.logoLink || '/';
 ---
 
 <header class="absolute inset-x-0 top-0 z-20 has-[details[open]]:fixed has-[details[open]]:bg-navy">
   <Container>
     <div class="flex items-center justify-between py-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
-      <Image src={logo} alt="Sawicka Grzyb" width={96} height={52} loading="eager" class="h-13 w-24 object-contain" />
+      <a href={logoHref} class="h-13 w-24 shrink-0">
+        {
+          logoUrl ? (
+            <img src={logoUrl} alt={logoAlt} loading="eager" class="h-13 w-24 object-contain" />
+          ) : (
+            <Image src={defaultLogo} alt={logoAlt} width={96} height={52} loading="eager" class="h-13 w-24 object-contain" />
+          )
+        }
+      </a>
 
       <nav class="hidden items-center gap-12 lg:flex">
         {
           navLinks.map((link) => (
-            <a href={resolveLinkHref(link)} class="text-body leading-[1.2] tracking-tagline text-white">
+            <a href={resolveLinkHref(link)} class="nav-link text-body leading-[1.2] tracking-tagline text-white">
               {link.label}
             </a>
           ))
@@ -61,7 +73,10 @@ const ctaHref = resolveLinkHref(header.cta);
             </svg>
           </summary>
 
-          <nav class="fixed inset-x-0 top-25 bottom-0 z-20 flex flex-col overflow-y-auto bg-navy px-4 pb-8">
+          <nav
+            data-mobile-nav
+            class="fixed inset-x-0 top-25 bottom-0 z-20 flex flex-col overflow-y-auto bg-navy px-4 pb-8"
+          >
             <ul class="flex flex-col border-t border-white/15">
               {
                 navLinks.map((link) => (
@@ -104,3 +119,11 @@ const ctaHref = resolveLinkHref(header.cta);
     </div>
   </Container>
 </header>
+
+<script>
+  document.querySelectorAll('[data-mobile-nav] a').forEach((link) => {
+    link.addEventListener('click', () => {
+      link.closest('details')?.removeAttribute('open');
+    });
+  });
+</script>

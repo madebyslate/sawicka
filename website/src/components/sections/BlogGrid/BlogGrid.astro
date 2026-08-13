@@ -1,0 +1,63 @@
+---
+import type { Post } from '@payload-types';
+import Container from '../../ui/Container/Container.astro';
+import Section from '../../ui/Section/Section.astro';
+import Button from '../../ui/Button/Button.astro';
+import BlogCard from '../../ui/BlogCard/BlogCard.astro';
+
+interface Props {
+  posts: Post[];
+  postsPerPage?: number | null;
+}
+
+const { posts, postsPerPage } = Astro.props;
+
+const INITIAL_VISIBLE = postsPerPage && postsPerPage > 0 ? postsPerPage : 9;
+---
+
+<Section class="bg-cream pt-18.25 pb-21.25">
+  <Container>
+    <div class="flex w-full flex-col items-center gap-14">
+      <div class="grid w-full grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-3" data-blog-grid>
+        {
+          posts.map((post, index) => (
+            <BlogCard
+              post={post}
+              data-blog-item
+              class={index >= INITIAL_VISIBLE ? 'hidden' : undefined}
+              revealDelay={index < INITIAL_VISIBLE ? (index % 3) * 100 : undefined}
+            />
+          ))
+        }
+      </div>
+
+      {
+        posts.length > INITIAL_VISIBLE && (
+          <Button type="button" variant="accent" data-load-more data-batch-size={INITIAL_VISIBLE}>
+            Load More
+          </Button>
+        )
+      }
+    </div>
+  </Container>
+</Section>
+
+<script>
+  document.querySelectorAll('[data-load-more]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const grid = document.querySelector('[data-blog-grid]');
+      if (!grid) return;
+
+      const hiddenItems = grid.querySelectorAll('[data-blog-item].hidden');
+      const batchSize = Number(button.getAttribute('data-batch-size') ?? '9');
+
+      Array.from(hiddenItems)
+        .slice(0, batchSize)
+        .forEach((el) => el.classList.remove('hidden'));
+
+      if (grid.querySelectorAll('[data-blog-item].hidden').length === 0) {
+        button.remove();
+      }
+    });
+  });
+</script>

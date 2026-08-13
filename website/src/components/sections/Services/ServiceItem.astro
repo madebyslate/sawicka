@@ -14,21 +14,37 @@ interface Props {
   button?: LinkLike | null;
   open?: boolean;
   class?: string;
+  revealDelay?: number;
 }
 
-const { number, title, description, areas = [], image, button, open = true, class: className } = Astro.props;
+const {
+  number,
+  title,
+  description,
+  areas = [],
+  image,
+  button,
+  open = false,
+  class: className,
+  revealDelay,
+} = Astro.props;
 
 const imageUrl = resolveMediaUrl(image);
 const imageAlt = image && typeof image === 'object' ? image.alt : title;
 const buttonHref = resolveLinkHref(button);
 ---
 
-<details class:list={['group w-full border-t border-[rgba(255,255,255,0.16)] pt-[80px]', className]} open={open}>
-  <summary class="list-none cursor-pointer [&::-webkit-details-marker]:hidden">
+<details
+  data-reveal={revealDelay !== undefined ? true : undefined}
+  style={revealDelay !== undefined ? `--reveal-delay: ${revealDelay}ms` : undefined}
+  class:list={['service-item group w-full border-t border-[rgba(255,255,255,0.16)] pt-15', className]}
+  open={open}
+>
+  <summary class="list-none cursor-pointer select-none [&::-webkit-details-marker]:hidden">
     <div class="flex w-full items-center gap-6">
-      <div class="flex flex-1 flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,429px)_minmax(0,1fr)] lg:items-start lg:gap-x-4">
+      <div class="flex flex-1 flex-col gap-4 transition-transform duration-500 ease-out group-hover:translate-y-1 lg:grid lg:grid-cols-[minmax(0,429px)_minmax(0,1fr)] lg:items-start lg:gap-x-4">
         <div class="pt-3.5">
-          <p class="text-[14px] font-medium uppercase text-white opacity-80"
+          <p class="text-[14px] font-medium uppercase text-white opacity-80 transition-colors duration-500 group-hover:text-gold group-hover:opacity-100"
              style="font-family: Manrope, sans-serif; line-height: normal;">
             [ {number} ]
           </p>
@@ -37,7 +53,7 @@ const buttonHref = resolveLinkHref(button);
         <div class="flex flex-col gap-4">
           <Heading
             as="h3"
-            class="text-white font-serif text-[32px] leading-[38.4px] tracking-[-1.28px] font-normal max-w-135.25"
+            class="text-white font-serif text-[32px] leading-[38.4px] tracking-[-1.28px] font-normal max-w-135.25 transition-colors duration-500 group-hover:text-gold"
           >
             {title}
           </Heading>
@@ -49,12 +65,12 @@ const buttonHref = resolveLinkHref(button);
       </div>
 
       <div class="flex shrink-0 items-center justify-center">
-        <span class="grid h-[48px] w-[48px] place-items-center rounded-full border-[1.6px] border-white text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="block group-open:hidden">
-            <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m18 14.167-6-7-6 7" />
+        <span class="grid h-[48px] w-[48px] place-items-center rounded-full border-[1.6px] border-white text-white transition-all duration-500 ease-out group-hover:translate-y-1 group-hover:scale-105 group-hover:border-gold group-hover:bg-gold group-hover:text-navy">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="hidden group-open:block">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m18 14.167-6-7-6 7" />
           </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" class="hidden group-open:block">
-            <path d="M6 9.8335L12 16.8335L18 9.8335" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" class="block group-open:hidden">
+            <path d="M6 9.8335L12 16.8335L18 9.8335" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </span>
       </div>

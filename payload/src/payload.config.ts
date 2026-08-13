@@ -17,6 +17,7 @@ import { Testimonials } from './collections/Testimonials'
 import { SiteSettings } from './globals/SiteSettings'
 import { Header } from './globals/Header'
 import { Footer } from './globals/Footer'
+import { GlobalCta } from './globals/GlobalCta'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -30,7 +31,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Menu, Pages, Posts, Categories, Testimonials],
-  globals: [SiteSettings, Header, Footer],
+  globals: [SiteSettings, Header, Footer, GlobalCta],
   i18n: {
     supportedLanguages: { en, pl },
     fallbackLanguage: 'pl',

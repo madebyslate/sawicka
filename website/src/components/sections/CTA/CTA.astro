@@ -6,23 +6,28 @@ import Heading from '../../ui/Heading/Heading.astro';
 import Button from '../../ui/Button/Button.astro';
 import { resolveLinkHref, type LinkLike } from '../../../lib/payload/link';
 import { resolveMediaUrl } from '../../../lib/payload/media';
+import { getGlobalCta } from '../../../lib/payload/global-cta';
 
 interface Props {
+  useGlobal?: boolean | null;
   eyebrow?: string | null;
-  heading: string;
+  heading?: string | null;
   description?: string | null;
   backgroundImage?: number | Media | null;
-  button: LinkLike;
+  button?: LinkLike | null;
 }
 
-const { eyebrow, heading, description, backgroundImage, button } = Astro.props;
+const props = Astro.props;
+
+const { eyebrow, heading, description, backgroundImage, button } =
+  props.useGlobal ?? true ? await getGlobalCta() : props;
 
 const backgroundImageUrl = resolveMediaUrl(backgroundImage);
 const backgroundImageAlt = backgroundImage && typeof backgroundImage === 'object' ? backgroundImage.alt : '';
 const buttonHref = resolveLinkHref(button);
 ---
 
-<section class="relative isolate overflow-hidden">
+<section id="kontakt" class="relative isolate overflow-hidden">
   {
     backgroundImageUrl && (
       <img
@@ -38,7 +43,7 @@ const buttonHref = resolveLinkHref(button);
 
   <Container class="flex min-h-180 py-15">
     <div class="flex w-full max-w-lg flex-col justify-between gap-16 text-white">
-      <div class="flex flex-col gap-4">
+      <div data-reveal style="--reveal-delay: 0ms" class="flex flex-col gap-4">
         {eyebrow && (
           <SectionLabel tone="light">
             {eyebrow}
@@ -48,10 +53,10 @@ const buttonHref = resolveLinkHref(button);
           {heading}
         </Heading>
       </div>
-      <div class="flex flex-col gap-8">
+      <div data-reveal style="--reveal-delay: 150ms" class="flex flex-col gap-8">
         {description && <p class="text-body text-white/80">{description}</p>}
         <Button variant="primary" href={buttonHref} class="self-start">
-          {button.label}
+          {button?.label}
         </Button>
       </div>
     </div>

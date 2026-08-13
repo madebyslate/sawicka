@@ -3,18 +3,24 @@ interface Props {
   question: string;
   open?: boolean;
   class?: string;
+  revealDelay?: number;
 }
 
-const { question, open = false, class: className } = Astro.props;
+const { question, open = false, class: className, revealDelay } = Astro.props;
 ---
 
-<details class:list={['group border-b border-[rgba(3,15,34,0.08)] py-6', className]} open={open}>
+<details
+  data-reveal={revealDelay !== undefined ? true : undefined}
+  style={revealDelay !== undefined ? `--reveal-delay: ${revealDelay}ms` : undefined}
+  class:list={['group border-b border-[rgba(3,15,34,0.08)] py-6', className]}
+  open={open}
+>
   <summary
-    class="flex cursor-pointer list-none items-center justify-between gap-6 [&::-webkit-details-marker]:hidden"
+    class="flex cursor-pointer list-none select-none items-center justify-between gap-6 [&::-webkit-details-marker]:hidden"
   >
-    <span class="font-serif text-h3 tracking-h3 text-navy">{question}</span>
+    <span class="font-serif text-h3 tracking-h3 text-navy transition-colors group-hover:text-[#936625]">{question}</span>
     <span
-      class="relative grid h-8 w-8 shrink-0 place-items-center rounded-full border border-navy text-navy cursor-pointer"
+      class="relative grid h-8 w-8 shrink-0 place-items-center rounded-full border border-navy text-navy cursor-pointer transition-colors group-hover:border-[#936625] group-hover:text-[#936625]"
       aria-hidden="true"
     >
       <svg
