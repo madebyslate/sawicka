@@ -25,12 +25,14 @@ const { tagline, heading, description, image, features } = Astro.props;
 
 const imageUrl = resolveMediaUrl(image);
 const imageAlt = image && typeof image === 'object' ? image.alt : '';
+const imageWidth = image && typeof image === 'object' ? (image.width ?? undefined) : undefined;
+const imageHeight = image && typeof image === 'object' ? (image.height ?? undefined) : undefined;
 
 const leftColumn = (features ?? []).filter((_, index) => index % 2 === 0);
 const rightColumn = (features ?? []).filter((_, index) => index % 2 === 1);
 ---
 
-<Section id="about" class="bg-cream">
+<Section id="o-mnie" class="bg-cream">
   <Container>
     <div class="flex w-full flex-col items-start gap-20">
       <div data-reveal style="--reveal-delay: 0ms" class="flex w-full flex-col items-start gap-4">
@@ -63,7 +65,14 @@ const rightColumn = (features ?? []).filter((_, index) => index % 2 === 1);
           ))}
         </div>
         {imageUrl && (
-          <img src={imageUrl} alt={imageAlt} loading="lazy" class="h-full min-h-80 w-full rounded-card object-cover" />
+          <img
+            src={imageUrl}
+            alt={imageAlt}
+            width={imageWidth}
+            height={imageHeight}
+            loading="lazy"
+            class="h-full min-h-80 w-full rounded-card object-cover"
+          />
         )}
       </div>
     </div>

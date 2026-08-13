@@ -23,12 +23,13 @@ interface Props {
   heading: string;
   description?: string | null;
   services?: Service[] | null;
+  areasOfSupportLabel?: string | null;
 }
 
-const { tagline, heading, description, services } = Astro.props;
+const { tagline, heading, description, services, areasOfSupportLabel } = Astro.props;
 ---
 
-<Section id="services" class="bg-navy pt-[100px] pb-[120px]">
+<Section id="uslugi" class="bg-navy pt-[100px] pb-[120px]">
   <Container>
     <div class="flex w-full flex-col items-start gap-20">
       <div
@@ -67,6 +68,7 @@ const { tagline, heading, description, services } = Astro.props;
               areas={(service.areas ?? []).map((area) => area.value)}
               image={service.image}
               button={service.button}
+              areasOfSupportLabel={areasOfSupportLabel}
               revealDelay={index * 100}
             />
           ))

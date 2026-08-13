@@ -1,5 +1,5 @@
 ---
-import type { Page } from '@payload-types';
+import type { Page, SiteSetting } from '@payload-types';
 import Hero from '@sections/Hero/Hero.astro';
 import CTA from '@sections/CTA/CTA.astro';
 import Blog from '@sections/Blog/Blog.astro';
@@ -17,22 +17,23 @@ type Blocks = NonNullable<Page['content']>;
 
 interface Props {
   blocks: Blocks;
+  interfaceText?: SiteSetting['interfaceText'];
 }
 
-const { blocks } = Astro.props;
+const { blocks, interfaceText } = Astro.props;
 ---
 
 {
   blocks.map((block) => {
     switch (block.blockType) {
       case 'hero':
-        return <Hero {...block} />;
+        return <Hero {...block} scrollDownLabel={interfaceText?.hero?.scrollDownLabel} />;
       case 'trustStatementAndStatistics':
         return <TrustStatementAndStatistics {...block} />;
       case 'painPoints':
         return <PainPoints {...block} />;
       case 'services':
-        return <Services {...block} />;
+        return <Services {...block} areasOfSupportLabel={interfaceText?.services?.areasOfSupportLabel} />;
       case 'personalRelationship':
         return <PersonalRelationship {...block} />;
       case 'experienceAndTrust':
@@ -42,7 +43,7 @@ const { blocks } = Astro.props;
       case 'testimonials':
         return <Testimonials {...block} />;
       case 'blog':
-        return <Blog {...block} />;
+        return <Blog {...block} readArticleLabel={interfaceText?.blog?.readArticleLabel} />;
       case 'faq':
         return <Faq {...block} />;
       case 'cta':

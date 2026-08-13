@@ -41,13 +41,13 @@ async function seed() {
     await payload.updateGlobal({
       slug: 'global-cta',
       data: {
-        eyebrow: 'Ready to Work?',
-        heading: "Let's Make Your Accounting Simpler.",
+        eyebrow: 'Gotowi do współpracy?',
+        heading: 'Uprośćmy Twoją księgowość.',
         description:
-          "Whether you're starting a new business or looking for a more personal accounting experience, I'd be happy to help. Book a free introductory call and let's discuss your business.",
+          'Niezależnie od tego, czy zakładasz nową firmę, czy szukasz bardziej osobistej obsługi księgowej, chętnie pomogę. Umów się na bezpłatną rozmowę wstępną i porozmawiajmy o Twojej firmie.',
         backgroundImage: mediaId,
         button: {
-          label: 'Book a Free Call',
+          label: 'Umów bezpłatną rozmowę',
           type: 'custom',
           url: '#kontakt',
         },
@@ -72,8 +72,8 @@ async function seed() {
   const page = await payload.create({
     collection: 'pages',
     data: {
-      internalName: 'Home',
-      title: 'Home',
+      internalName: 'Strona główna',
+      title: 'Strona główna',
       slug: 'home',
       generateSlug: false,
       content: [

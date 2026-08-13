@@ -1,0 +1,91 @@
+---
+// Wariant Hero dla strony 404 — reużywa te same klocki dekoracyjne co Hero
+// (GridLines, noise, poświata, floating badges), ale bez portretu, bez
+// wskaźnika "Scroll Down" i z prostszym układem: heading od góry, opis +
+// przycisk przy dole (bez wiersza "trusted by" pośrodku).
+import Container from '../../ui/Container/Container.astro';
+import Heading from '../../ui/Heading/Heading.astro';
+import Button from '../../ui/Button/Button.astro';
+import GridLines from '../../ui/GridLines/GridLines.astro';
+import FloatingBadge from '../Hero/FloatingBadge.astro';
+import { noiseBackgroundImage } from '../../../lib/noiseBackground';
+
+interface Props {
+  tagline?: string;
+  heading?: string;
+  description?: string;
+  buttonLabel?: string;
+  buttonHref?: string;
+  badgeLabels?: string[];
+}
+
+const {
+  tagline = 'Błąd 404',
+  heading = 'Nie możemy znaleźć strony, której szukasz.',
+  description = 'Być może w wpisanym przez Ciebie adresie wkradła się literówka lub strona została przeniesiona.',
+  buttonLabel = 'Powrót do strony głównej',
+  buttonHref = '/',
+  badgeLabels = ['Ups!', 'Błąd 404', 'Nie znaleziono strony'],
+} = Astro.props;
+
+const badgePositionClasses = [
+  'top-[225px] left-[calc(75%+5px)]',
+  'top-[556px] left-[calc(75%+37px)]',
+  'top-[718px] left-[calc(50%+90px)]',
+];
+---
+
+<section
+  class="relative isolate min-h-0 overflow-hidden lg:min-h-230"
+  style="background: linear-gradient(180deg, #030F22 0%, #14243D 100%);"
+>
+  <GridLines zIndexClass="z-[-25]" />
+
+  <div
+    class="pointer-events-none absolute z-[-15] rounded-full mix-blend-lighten"
+    style="left: 13.54%; top: 81.09%; width: 72.85%; height: 87.39%; background: #8D96A5; opacity: 0.4; filter: blur(200px);"
+  >
+  </div>
+
+  <div
+    class="pointer-events-none absolute inset-0 -z-15 opacity-[0.32] mix-blend-soft-light"
+    style={`background-image: ${noiseBackgroundImage}; background-repeat: repeat;`}
+  >
+  </div>
+
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 -z-1 h-45 bg-linear-to-b from-navy/0 to-navy"></div>
+
+  {
+    badgeLabels.map((label, index) => (
+      <FloatingBadge label={label} class={badgePositionClasses[index]} revealDelay={300 + index * 180} />
+    ))
+  }
+
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -z-1 hidden select-none font-serif text-white/6 lg:block"
+    style="right: 4%; top: 50%; transform: translateY(-50%); font-size: 420px; line-height: 1;"
+  >
+    404
+  </div>
+
+  <Container class="relative z-10 flex min-h-0 flex-col justify-center pt-20 pb-10 lg:min-h-230 lg:py-0">
+    <div class="flex min-w-0 w-full max-w-2xl flex-col items-start gap-6">
+      <div data-reveal style="--reveal-delay: 0ms" class="flex min-w-0 w-full flex-col items-start gap-4">
+        <span
+          class="inline-flex items-center rounded-pill bg-linear-to-r from-gold to-bronze px-3 py-1.5 text-tagline tracking-tagline font-medium text-navy"
+        >
+          {tagline}
+        </span>
+        <Heading as="h1" class="text-white">{heading}</Heading>
+        <p class="text-body text-white/80">{description}</p>
+      </div>
+
+      <div data-reveal style="--reveal-delay: 200ms">
+        <Button variant="outline" href={buttonHref}>
+          {buttonLabel}
+        </Button>
+      </div>
+    </div>
+  </Container>
+</section>

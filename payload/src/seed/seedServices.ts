@@ -45,56 +45,56 @@ async function seed() {
     process.exit(0)
   }
 
-  const accountingId = await uploadIfMissing(payload, 'Accounting', 'accounting.png')
-  const hrPayrollId = await uploadIfMissing(payload, 'HR & Payroll', 'hr-payroll.png')
-  const businessAdvisoryId = await uploadIfMissing(payload, 'Business Advisory & Company Setup', 'business-advisory.png')
+  const accountingId = await uploadIfMissing(payload, 'Księgowość', 'accounting.png')
+  const hrPayrollId = await uploadIfMissing(payload, 'Kadry i płace', 'hr-payroll.png')
+  const businessAdvisoryId = await uploadIfMissing(payload, 'Doradztwo biznesowe i zakładanie firm', 'business-advisory.png')
 
   const servicesBlock = {
     blockType: 'services' as const,
-    tagline: 'Services',
-    heading: 'Everything Your Business Needs, Handled Personally.',
+    tagline: 'Usługi',
+    heading: 'Wszystko, czego potrzebuje Twoja firma, załatwione osobiście.',
     description:
-      'From daily bookkeeping to business registration, every service is delivered directly by the person responsible for your account.',
+      'Od codziennej księgowości po rejestrację firmy — każda usługa jest realizowana bezpośrednio przez osobę odpowiedzialną za Twoje konto.',
     services: [
       {
         number: '01',
-        title: 'Accounting',
-        description: 'Keep your financial records accurate, compliant, and always ready for the next decision.',
+        title: 'Księgowość',
+        description: 'Utrzymuj dokładne, zgodne z przepisami zapisy finansowe, zawsze gotowe na kolejną decyzję.',
         areas: [
-          { value: 'Revenue & expense bookkeeping' },
-          { value: 'Lump-sum taxation' },
-          { value: 'Full accounting' },
-          { value: 'Tax settlements' },
+          { value: 'Ewidencja przychodów i rozchodów' },
+          { value: 'Ryczałt ewidencjonowany' },
+          { value: 'Pełna księgowość' },
+          { value: 'Rozliczenia podatkowe' },
         ],
         image: accountingId,
-        button: { label: 'Learn More', type: 'custom' as const, url: '#kontakt' },
+        button: { label: 'Dowiedz się więcej', type: 'custom' as const, url: '#kontakt' },
       },
       {
         number: '02',
-        title: 'HR & Payroll',
-        description: 'Reliable payroll administration so your employees are paid correctly and on time.',
+        title: 'Kadry i płace',
+        description: 'Rzetelna obsługa kadrowo-płacowa, dzięki której Twoi pracownicy otrzymują wynagrodzenie poprawnie i na czas.',
         areas: [
-          { value: 'Payroll processing' },
-          { value: 'Employment documentation' },
-          { value: 'Social security administration' },
-          { value: 'Employee reporting' },
+          { value: 'Naliczanie wynagrodzeń' },
+          { value: 'Dokumentacja pracownicza' },
+          { value: 'Rozliczenia ZUS' },
+          { value: 'Raportowanie pracownicze' },
         ],
         image: hrPayrollId,
-        button: { label: 'Learn More', type: 'custom' as const, url: '#kontakt' },
+        button: { label: 'Dowiedz się więcej', type: 'custom' as const, url: '#kontakt' },
       },
       {
         number: '03',
-        title: 'Business Advisory & Company Setup',
+        title: 'Doradztwo biznesowe i zakładanie firm',
         description:
-          "Starting or changing a business doesn't have to be overwhelming. Receive practical guidance from registration to choosing the right tax structure.",
+          'Zakładanie lub zmiana formy działalności nie musi być przytłaczające. Zyskaj praktyczne wsparcie — od rejestracji po wybór odpowiedniej formy opodatkowania.',
         areas: [
-          { value: 'Company registration' },
-          { value: 'Tax form selection' },
-          { value: 'Business consultation' },
-          { value: 'Administrative support' },
+          { value: 'Rejestracja firmy' },
+          { value: 'Wybór formy opodatkowania' },
+          { value: 'Konsultacje biznesowe' },
+          { value: 'Wsparcie administracyjne' },
         ],
         image: businessAdvisoryId,
-        button: { label: 'Learn More', type: 'custom' as const, url: '#kontakt' },
+        button: { label: 'Dowiedz się więcej', type: 'custom' as const, url: '#kontakt' },
       },
     ],
   }

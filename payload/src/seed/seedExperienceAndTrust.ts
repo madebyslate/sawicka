@@ -57,39 +57,39 @@ async function seed() {
 
   const experienceAndTrustBlock = {
     blockType: 'experienceAndTrust' as const,
-    tagline: 'Experience and Trust',
-    heading: 'Building Long-Term Business Relationships Through Trust.',
+    tagline: 'Doświadczenie i zaufanie',
+    heading: 'Buduję długoterminowe relacje biznesowe oparte na zaufaniu.',
     portrait: portraitId,
-    bio: 'Sawicka Grzyb is a certified accountant dedicated to helping business owners manage their finances with confidence. By working directly with every client, she provides reliable accounting, clear communication, and personal support tailored to each business.',
+    bio: 'Sawicka Grzyb to certyfikowana księgowa, która pomaga przedsiębiorcom zarządzać finansami z pewnością siebie. Pracując bezpośrednio z każdym klientem, zapewnia rzetelną księgowość, jasną komunikację i osobiste wsparcie dopasowane do każdej firmy.',
     facts: [
       {
-        label: 'Career',
+        label: 'Kariera',
         type: 'tags' as const,
-        tags: [{ value: '10+ Years' }],
+        tags: [{ value: '10+ lat doświadczenia' }],
       },
       {
-        label: 'Professional Experience',
+        label: 'Doświadczenie zawodowe',
         type: 'tags' as const,
         tags: [
-          { value: 'Bookkeeping' },
-          { value: 'Payroll Management' },
-          { value: 'Tax Compliance' },
-          { value: 'Business Advisory' },
+          { value: 'Księgowość' },
+          { value: 'Kadry i płace' },
+          { value: 'Rozliczenia podatkowe' },
+          { value: 'Doradztwo biznesowe' },
         ],
       },
       {
-        label: 'Certifications & Licenses',
+        label: 'Certyfikaty i uprawnienia',
         type: 'images' as const,
         images: [{ image: cert1Id }, { image: cert2Id }],
       },
       {
-        label: 'Professional Liability Insurance',
+        label: 'Ubezpieczenie odpowiedzialności zawodowej',
         type: 'tags' as const,
-        tags: [{ value: 'Fully Insured Professional' }],
+        tags: [{ value: 'W pełni ubezpieczony specjalista' }],
       },
     ],
     quote:
-      "My goal isn't simply to manage your accounting. It's to become the accountant you never have to worry about.",
+      'Moim celem nie jest tylko prowadzenie Twojej księgowości. To zostanie księgową, o którą nigdy nie musisz się martwić.',
   }
 
   const onboardingIndex = content.findIndex((block) => block.blockType === 'onboardingProcess')

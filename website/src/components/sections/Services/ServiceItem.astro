@@ -15,6 +15,7 @@ interface Props {
   open?: boolean;
   class?: string;
   revealDelay?: number;
+  areasOfSupportLabel?: string | null;
 }
 
 const {
@@ -27,10 +28,13 @@ const {
   open = false,
   class: className,
   revealDelay,
+  areasOfSupportLabel,
 } = Astro.props;
 
 const imageUrl = resolveMediaUrl(image);
 const imageAlt = image && typeof image === 'object' ? image.alt : title;
+const imageWidth = image && typeof image === 'object' ? (image.width ?? undefined) : undefined;
+const imageHeight = image && typeof image === 'object' ? (image.height ?? undefined) : undefined;
 const buttonHref = resolveLinkHref(button);
 ---
 
@@ -41,7 +45,7 @@ const buttonHref = resolveLinkHref(button);
   open={open}
 >
   <summary class="list-none cursor-pointer select-none [&::-webkit-details-marker]:hidden">
-    <div class="flex w-full items-center gap-6">
+    <div class="flex w-full items-center gap-6 pr-1">
       <div class="flex flex-1 flex-col gap-4 transition-transform duration-500 ease-out group-hover:translate-y-1 lg:grid lg:grid-cols-[minmax(0,429px)_minmax(0,1fr)] lg:items-start lg:gap-x-4">
         <div class="pt-3.5">
           <p class="text-[14px] font-medium uppercase text-white opacity-80 transition-colors duration-500 group-hover:text-gold group-hover:opacity-100"
@@ -82,7 +86,7 @@ const buttonHref = resolveLinkHref(button);
       <div class="flex flex-col gap-[24px]">
         <p class="text-[18px] font-semibold tracking-[-0.72px] text-white"
            style="font-family: Inter, sans-serif; line-height: normal;">
-          Areas of Support
+          {areasOfSupportLabel || 'Obszary wsparcia'}
         </p>
         <ul class="flex flex-col gap-4">
           {
@@ -110,7 +114,14 @@ const buttonHref = resolveLinkHref(button);
 
     {imageUrl && (
       <div class="h-full w-full overflow-hidden rounded-card">
-        <img src={imageUrl} alt={imageAlt} loading="lazy" class="block h-full w-full object-cover" />
+        <img
+          src={imageUrl}
+          alt={imageAlt}
+          width={imageWidth}
+          height={imageHeight}
+          loading="lazy"
+          class="block h-full w-full object-cover"
+        />
       </div>
     )}
   </div>

@@ -1225,6 +1225,58 @@ export interface SiteSetting {
      */
     postsPerPage?: number | null;
   };
+  /**
+   * Krótkie napisy "na sztywno" w kodzie strony (etykiety przycisków, nagłówki pomocnicze) — nie należą do żadnego konkretnego bloku, więc zebrane są tutaj w jednym miejscu do tłumaczenia/edycji.
+   */
+  interfaceText?: {
+    hero?: {
+      scrollDownLabel?: string | null;
+    };
+    services?: {
+      areasOfSupportLabel?: string | null;
+    };
+    blog?: {
+      readArticleLabel?: string | null;
+      loadMoreLabel?: string | null;
+    };
+    post?: {
+      faqHeading?: string | null;
+      backButtonLabel?: string | null;
+      tableOfContentsHeading?: string | null;
+    };
+    breadcrumbHomeLabel?: string | null;
+  };
+  notFound?: {
+    /**
+     * Np. "Błąd 404".
+     */
+    tagline?: string | null;
+    heading?: string | null;
+    description?: string | null;
+    button?: {
+      label?: string | null;
+      type?: ('reference' | 'custom') | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+    };
+    /**
+     * Zawsze dokładnie 3 — ich pozycje na tle sekcji są ustalone na sztywno w kodzie, edytowalny jest tylko tekst.
+     */
+    badges?:
+      | {
+          label: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
   organization?: {
     /**
      * Używane w JSON-LD organizacji (schema.org "logo"). Zalecany kwadratowy/poziomy PNG lub SVG na jasnym tle.
@@ -1407,6 +1459,55 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | {
         blogTitle?: T;
         postsPerPage?: T;
+      };
+  interfaceText?:
+    | T
+    | {
+        hero?:
+          | T
+          | {
+              scrollDownLabel?: T;
+            };
+        services?:
+          | T
+          | {
+              areasOfSupportLabel?: T;
+            };
+        blog?:
+          | T
+          | {
+              readArticleLabel?: T;
+              loadMoreLabel?: T;
+            };
+        post?:
+          | T
+          | {
+              faqHeading?: T;
+              backButtonLabel?: T;
+              tableOfContentsHeading?: T;
+            };
+        breadcrumbHomeLabel?: T;
+      };
+  notFound?:
+    | T
+    | {
+        tagline?: T;
+        heading?: T;
+        description?: T;
+        button?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              reference?: T;
+              url?: T;
+            };
+        badges?:
+          | T
+          | {
+              label?: T;
+              id?: T;
+            };
       };
   organization?:
     | T

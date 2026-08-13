@@ -21,13 +21,18 @@ const siteSettings = await getSiteSettings();
 
 <Layout
   title={`Blog | ${siteSettings.siteName}`}
-  description="Insights, Ideas, and Practical Solutions — praktyczne porady księgowe dla właścicieli firm."
+  description="Wskazówki, pomysły i praktyczne rozwiązania — praktyczne porady księgowe dla właścicieli firm."
 >
   <Header slot="header" />
 
-  <PageHero tagline={siteSettings.blog?.blogTitle || 'Blog'} heading="Insights, Ideas, and Practical Solutions" />
+  <PageHero tagline={siteSettings.blog?.blogTitle || 'Blog'} heading="Wskazówki, pomysły i praktyczne rozwiązania" />
 
-  <BlogGrid posts={posts} postsPerPage={siteSettings.blog?.postsPerPage} />
+  <BlogGrid
+    posts={posts}
+    postsPerPage={siteSettings.blog?.postsPerPage}
+    readArticleLabel={siteSettings.interfaceText?.blog?.readArticleLabel}
+    loadMoreLabel={siteSettings.interfaceText?.blog?.loadMoreLabel}
+  />
 
   {ctaBlock && <CTA {...ctaBlock} />}
 

@@ -3,12 +3,18 @@ import type { Media } from '@payload-types';
 import Container from '../../ui/Container/Container.astro';
 import Heading from '../../ui/Heading/Heading.astro';
 import Button from '../../ui/Button/Button.astro';
+import Image from '../../ui/Image/Image.astro';
 import GridLines from '../../ui/GridLines/GridLines.astro';
 import FloatingBadge from './FloatingBadge.astro';
-import noiseTexture from '../../../assets/sections/hero/noise-texture.png';
-// import { noiseBackgroundImage } from '../../../lib/noiseBackground';
+import { noiseBackgroundImage } from '../../../lib/noiseBackground';
+import noiseTexturePng from '../../../assets/sections/hero/noise-texture.png';
+import heroPerson from '../../../assets/sections/hero/hero-portrait.png';
 import { resolveLinkHref, type LinkLike } from '../../../lib/payload/link';
 import { resolveMediaUrl } from '../../../lib/payload/media';
+
+// Tymczasowa flaga do porównania PNG vs SVG-noise — przełącz i odśwież.
+const USE_SVG_NOISE = true;
+const noiseStyleBg = USE_SVG_NOISE ? noiseBackgroundImage : `url(${noiseTexturePng.src})`;
 
 interface FloatingBadgeData {
   label: string;
@@ -25,32 +31,35 @@ interface Props {
   primaryButton: LinkLike;
   secondaryButton: LinkLike;
   floatingBadges?: FloatingBadgeData[] | null;
+  scrollDownLabel?: string | null;
 }
 
 const {
   tagline,
   heading,
   description,
-  portrait,
   avatarsImage,
   trustText,
   trustHighlight,
   primaryButton,
   secondaryButton,
   floatingBadges,
+  scrollDownLabel,
 } = Astro.props;
 
-const portraitUrl = resolveMediaUrl(portrait);
-const portraitAlt = portrait && typeof portrait === 'object' ? portrait.alt : '';
 const avatarsImageUrl = resolveMediaUrl(avatarsImage);
+const avatarsImageWidth =
+  avatarsImage && typeof avatarsImage === 'object' ? (avatarsImage.width ?? undefined) : undefined;
+const avatarsImageHeight =
+  avatarsImage && typeof avatarsImage === 'object' ? (avatarsImage.height ?? undefined) : undefined;
 const primaryHref = resolveLinkHref(primaryButton);
 const secondaryHref = resolveLinkHref(secondaryButton);
 
-const badgePositionClasses = [
-  'top-56 left-[75%]',
-  'top-139 left-[calc(75%+37px)]',
-  'top-180 left-[calc(50%+90px)]',
-];
+// Offsety liczone od prawej krawędzi obrazka (ten sam wrapper co portret, ten
+// sam punkt zaczepienia `right`), a nie od % szerokości sekcji — dzięki temu
+// dymki trzymają się tego samego miejsca na zdjęciu przy dowolnej szerokości
+// ekranu (>= lg), zamiast rozjeżdżać się z portretem przy zwężaniu okna.
+const badgePositionClasses = ['top-[225px] right-[286px]', 'top-[556px] right-[254px]', 'top-[718px] right-[536px]'];
 
 const trustParts =
   trustText && trustHighlight && trustText.includes(trustHighlight)
@@ -64,17 +73,27 @@ const trustParts =
 >
   <GridLines zIndexClass="z-[-25]" />
 
-  {
-    portraitUrl && (
-      <img
-        src={portraitUrl}
-        alt={portraitAlt}
-        data-reveal
-        style="--reveal-delay: 0ms; --reveal-duration: 1.4s; --reveal-distance: 3rem"
-        class="absolute inset-y-0 right-0 -z-1 hidden h-full w-auto max-w-[70%] object-cover lg:block"
-      />
-    )
-  }
+  <div class="pointer-events-none absolute inset-0 mx-auto w-full max-w-page px-4 sm:px-6 lg:px-8 desktop:px-15">
+    <Image
+      src={heroPerson}
+      alt="Sawicka Grzyb"
+      data-reveal
+      loading="eager"
+      fetchpriority="high"
+      style="--reveal-delay: 0ms; --reveal-duration: 0.6s; --reveal-distance: 3rem; top: 124px; height: 890px;"
+      class="pointer-events-auto absolute right-0 -z-1 hidden w-auto object-contain lg:block"
+    />
+
+    {
+      (floatingBadges ?? []).slice(0, 3).map((badge, index) => (
+        <FloatingBadge
+          label={badge.label}
+          class={`${badgePositionClasses[index]} pointer-events-auto`}
+          revealDelay={300 + index * 180}
+        />
+      ))
+    }
+  </div>
 
   <div
     class="pointer-events-none absolute z-[-15] rounded-full mix-blend-lighten"
@@ -84,95 +103,104 @@ const trustParts =
 
   <div
     class="pointer-events-none absolute inset-0 -z-15 opacity-[0.32] mix-blend-soft-light"
-    style={`background-image: url(${noiseTexture.src}); background-repeat: repeat;`}
+    style={`background-image: ${noiseStyleBg}; background-repeat: repeat;`}
   >
   </div>
 
-  <div class="absolute inset-x-0 bottom-0 -z-10 h-45 bg-linear-to-b from-navy/0 to-navy"></div>
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 -z-1 h-45 bg-linear-to-b from-navy/0 to-navy"></div>
 
-{
-  (floatingBadges ?? []).slice(0, 3).map((badge, index) => (
-    <FloatingBadge
-      label={badge.label}
-      class={badgePositionClasses[index]}
-      revealDelay={300 + index * 180}
-    />
-  ))
-}
-
-  <Container class="relative z-10 flex flex-col pt-[125px] pb-[64px] lg:min-h-230 lg:pt-[185px] lg:pb-[88px]">
-    <div class="grid max-w-2xl flex-1 grid-rows-[1fr_auto_1fr] items-start">
-      <div
-        data-reveal
-        style="--reveal-delay: 0ms"
-        class="row-start-1 flex flex-col items-start justify-self-start gap-2 self-start"
-      >
-        {tagline && (
-          <span
-            class="inline-flex items-center rounded-pill bg-linear-to-r from-gold to-bronze px-3 py-1.5 text-tagline tracking-tagline font-medium text-navy"
-          >
-            {tagline}
-          </span>
-        )}
-        <Heading as="h1" class="text-white">{heading}</Heading>
-      </div>
-
-      {(avatarsImageUrl || trustText) && (
+  <Container class="relative z-10 flex flex-col pt-[125px] pb-0 lg:min-h-230 lg:pt-46.25 lg:pb-22">
+    <div class="mt-auto flex w-full items-end justify-between gap-8">
+      <div class="flex min-w-0 max-w-2xl flex-1 flex-col gap-14.5 lg:gap-29">
         <div
           data-reveal
-          style="--reveal-delay: 150ms"
-          class="row-start-2 my-6 flex items-center justify-self-start gap-4 self-center"
+          style="--reveal-delay: 0ms"
+          class="flex min-w-0 w-full flex-col items-start gap-2"
         >
-          {avatarsImageUrl && <img src={avatarsImageUrl} alt="" class="h-10.25 w-auto" />}
-          {trustText && (
-            <p class="max-w-64.75 text-tagline leading-[1.4] tracking-tagline text-white/80">
-              {trustParts ? (
-                <>
-                  {trustParts[0]}<span class="font-semibold text-white">{trustHighlight}</span>{trustParts[1]}
-                </>
-              ) : (
-                trustText
-              )}
-            </p>
+          {tagline && (
+            <span
+              class="inline-flex items-center rounded-pill bg-linear-to-r from-gold to-bronze px-3 py-1.5 text-tagline tracking-tagline font-medium text-navy"
+            >
+              {tagline}
+            </span>
           )}
+          <Heading as="h1" class="text-white">{heading}</Heading>
         </div>
-      )}
 
-      <div data-reveal style="--reveal-delay: 300ms" class="row-start-3 flex flex-col justify-end gap-8 self-end">
-        {description && <p class="text-body text-white/80">{description}</p>}
+        {(avatarsImageUrl || trustText) && (
+          <div
+            data-reveal
+            style="--reveal-delay: 150ms"
+            class="flex min-w-0 w-full items-center gap-4"
+          >
+            {avatarsImageUrl && (
+              <img
+                src={avatarsImageUrl}
+                alt=""
+                width={avatarsImageWidth}
+                height={avatarsImageHeight}
+                loading="eager"
+                class="h-10.25 w-auto"
+              />
+            )}
+            {trustText && (
+              <p class="max-w-64.75 text-tagline leading-[1.4] tracking-tagline text-white/80">
+                {trustParts ? (
+                  <>
+                    {trustParts[0]}<span class="font-semibold text-white">{trustHighlight}</span>{trustParts[1]}
+                  </>
+                ) : (
+                  trustText
+                )}
+              </p>
+            )}
+          </div>
+        )}
 
-        <div class="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
-          <Button variant="primary" href={primaryHref}>
-            {primaryButton.label}
-          </Button>
-          <Button variant="outline" href={secondaryHref}>
-            {secondaryButton.label}
-          </Button>
+        <div data-reveal style="--reveal-delay: 300ms" class="flex min-w-0 w-full flex-col gap-8">
+          {description && <p class="text-body text-white/80">{description}</p>}
+
+          <div class="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
+            <Button variant="primary" href={primaryHref}>
+              {primaryButton.label}
+            </Button>
+            <Button variant="outline" href={secondaryHref}>
+              {secondaryButton.label}
+            </Button>
+          </div>
         </div>
       </div>
+
+      <a
+        href="#zaufanie"
+        class="btn-hover hidden shrink-0 items-center gap-1 text-[14px] uppercase text-white opacity-80 transition-colors hover:text-gold lg:flex"
+        aria-label="Przewiń do następnej sekcji"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          fill="none"
+          viewBox="0 0 14 14"
+          class="h-3.5 w-3.5 flex-none"
+        >
+          <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" opacity=".8">
+            <path d="M7 12.834a4.384 4.384 0 0 0 4.375-4.376V5.542A4.384 4.384 0 0 0 7 1.167a4.384 4.384 0 0 0-4.375 4.375v2.916A4.384 4.384 0 0 0 7 12.834" />
+            <path d="M7 6.417a.874.874 0 0 1-.875-.875V4.375a.874.874 0 1 1 1.75 0v1.167A.88.88 0 0 1 7 6.417M7 3.5V1.167" />
+          </g>
+        </svg>
+        {scrollDownLabel || 'Przewiń w dół'}
+      </a>
     </div>
 
-<div class="mt-auto flex justify-end">
-<a
-  href="#trust-statement"
-  class="btn-hover hidden items-center gap-1 text-[14px] uppercase text-white opacity-80 transition-colors hover:text-gold lg:flex"
-  aria-label="Scroll to next section"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="14"
-    fill="none"
-    viewBox="0 0 14 14"
-    class="h-3.5 w-3.5 flex-none"
-  >
-    <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" opacity=".8">
-      <path d="M7 12.834a4.384 4.384 0 0 0 4.375-4.376V5.542A4.384 4.384 0 0 0 7 1.167a4.384 4.384 0 0 0-4.375 4.375v2.916A4.384 4.384 0 0 0 7 12.834" />
-      <path d="M7 6.417a.874.874 0 0 1-.875-.875V4.375a.874.874 0 1 1 1.75 0v1.167A.88.88 0 0 1 7 6.417M7 3.5V1.167" />
-    </g>
-  </svg>
-  Scroll Down
-</a>
-</div>
+    <Image
+      src={heroPerson}
+      alt="Sawicka Grzyb"
+      height={768}
+      data-reveal
+      loading="lazy"
+      style="--reveal-delay: 100ms; --reveal-duration: 0.6s; --reveal-distance: 3rem"
+      class="mx-auto mt-10 h-96 w-80 object-contain lg:hidden"
+    />
   </Container>
 </section>

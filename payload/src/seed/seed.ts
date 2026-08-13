@@ -22,6 +22,8 @@ const seeds = [
   'seedBlog.ts',
   'seedPostContent.ts',
   'seedTextPages.ts',
+  'seedNotFound.ts',
+  'seedInterfaceText.ts',
   'seedReorderHome.ts',
 ]
 

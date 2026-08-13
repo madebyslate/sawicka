@@ -59,31 +59,31 @@ async function seed() {
 
   const personalRelationshipBlock = {
     blockType: 'personalRelationship' as const,
-    tagline: 'Personal Relationship',
-    heading: 'One Accountant. One Relationship. Complete Responsibility.',
+    tagline: 'Osobista relacja',
+    heading: 'Jedna księgowa. Jedna relacja. Pełna odpowiedzialność.',
     description:
-      "Large firms often divide responsibilities across departments. Here, you'll always know exactly who's looking after your business.",
+      'Duże biura często dzielą obowiązki między działy. Tutaj zawsze będziesz wiedzieć dokładnie, kto zajmuje się Twoją firmą.',
     image: mediaId,
     features: [
       {
         icon: '/icons/user.svg',
-        title: 'I Know Your Business Personally',
-        description: 'No repeating your story to different people.',
+        title: 'Znam Twoją firmę osobiście',
+        description: 'Nie musisz powtarzać swojej historii różnym osobom.',
       },
       {
         icon: '/icons/messages.svg',
-        title: 'Direct Communication',
-        description: 'Questions go directly to the person responsible.',
+        title: 'Bezpośrednia komunikacja',
+        description: 'Pytania trafiają wprost do osoby odpowiedzialnej.',
       },
       {
         icon: '/icons/zap.svg',
-        title: 'Decisions Without Delays',
-        description: 'No "I\'ll ask a colleague." Just practical answers when you need them.',
+        title: 'Decyzje bez opóźnień',
+        description: 'Żadnego „muszę zapytać koleżankę". Tylko konkretne odpowiedzi, kiedy ich potrzebujesz.',
       },
       {
         icon: '/icons/shield.svg',
-        title: 'Personal Accountability',
-        description: 'Your business deserves ownership not handoffs.',
+        title: 'Osobista odpowiedzialność',
+        description: 'Twoja firma zasługuje na zaangażowanie, a nie przekazywanie z rąk do rąk.',
       },
     ],
   }

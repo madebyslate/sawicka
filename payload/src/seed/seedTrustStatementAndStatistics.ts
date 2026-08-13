@@ -26,14 +26,14 @@ async function seed() {
 
   const block = {
     blockType: 'trustStatementAndStatistics' as const,
-    tagline: 'Trust Statement and Statistics',
+    tagline: 'Zaufanie w liczbach',
     heading:
-      'Supporting Businesses with Reliable Accounting, Transparent Communication, and Long-Term Financial Confidence.',
+      'Wspieram firmy poprzez rzetelną księgowość, przejrzystą komunikację i długoterminowe bezpieczeństwo finansowe.',
     stats: [
-      { value: '8', suffix: '+', label: 'Years of Experience' },
-      { value: '100', suffix: '+', label: 'Businesses Supported' },
-      { value: '99', suffix: '%', label: 'On-Time Tax Filing' },
-      { value: '100', suffix: '%', label: 'Zero penalties for clients' },
+      { value: '8', suffix: '+', label: 'Lat doświadczenia' },
+      { value: '100', suffix: '+', label: 'Obsłużonych firm' },
+      { value: '99', suffix: '%', label: 'Rozliczeń podatkowych na czas' },
+      { value: '100', suffix: '%', label: 'Zero kar dla klientów' },
     ],
   }
 

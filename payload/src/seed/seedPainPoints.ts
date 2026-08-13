@@ -59,36 +59,36 @@ async function seed() {
 
   const painPointsBlock = {
     blockType: 'painPoints' as const,
-    tagline: 'Pain Points',
-    heading: 'Accounting Should Reduce Stress, Not Create More of It.',
+    tagline: 'Problemy klientów',
+    heading: 'Księgowość ma zmniejszać stres, a nie go dodawać.',
     description:
-      "Many business owners come to us after feeling frustrated with slow communication, confusing paperwork, or never knowing who is actually handling their business. If any of these situations sound familiar, you're not alone.",
+      'Wielu przedsiębiorców trafia do nas sfrustrowanych powolną komunikacją, niejasnymi dokumentami albo niewiedzą, kto tak naprawdę zajmuje się ich firmą. Jeśli którakolwiek z tych sytuacji brzmi znajomo, nie jesteś sam.',
     image: mediaId,
     painPoints: [
       {
         icon: '/icons/phone-off.svg',
-        title: 'I Never Reach My Accountant',
-        description: 'Every question becomes a new email chain or another person to explain everything to.',
+        title: 'Nigdy nie mogę się dodzwonić do księgowej',
+        description: 'Każde pytanie zamienia się w nowy wątek mailowy albo kolejną osobę, której muszę wszystko wyjaśniać od nowa.',
       },
       {
         icon: '/icons/alert.svg',
-        title: "I'm Afraid of Costly Mistakes",
-        description: 'One missed document or misunderstood regulation can become an expensive problem.',
+        title: 'Boję się kosztownych pomyłek',
+        description: 'Jeden brakujący dokument albo źle zrozumiany przepis może stać się drogim problemem.',
       },
       {
         icon: '/icons/file-stack.svg',
-        title: 'Everything Feels Complicated',
-        description: "Tax deadlines, paperwork, regulations — it's difficult to know what really matters.",
+        title: 'Wszystko wydaje się skomplikowane',
+        description: 'Terminy podatkowe, dokumenty, przepisy — trudno wiedzieć, co naprawdę jest ważne.',
       },
       {
         icon: '/icons/refresh.svg',
-        title: 'Switching Seems Like Too Much Work',
-        description: 'Changing accountants feels risky and time-consuming, so many businesses stay stuck.',
+        title: 'Zmiana księgowej wydaje się zbyt dużym wysiłkiem',
+        description: 'Zmiana biura rachunkowego wydaje się ryzykowna i czasochłonna, więc wiele firm zostaje w miejscu.',
       },
     ],
-    closingText: 'You deserve accounting that feels straightforward, personal, and dependable.',
+    closingText: 'Zasługujesz na księgowość, która jest prosta, osobista i godna zaufania.',
     button: {
-      label: 'Explore My Services',
+      label: 'Zobacz moje usługi',
       type: 'custom' as const,
       url: '#uslugi',
     },

@@ -24,6 +24,10 @@ const { eyebrow, heading, description, backgroundImage, button } =
 
 const backgroundImageUrl = resolveMediaUrl(backgroundImage);
 const backgroundImageAlt = backgroundImage && typeof backgroundImage === 'object' ? backgroundImage.alt : '';
+const backgroundImageWidth =
+  backgroundImage && typeof backgroundImage === 'object' ? (backgroundImage.width ?? undefined) : undefined;
+const backgroundImageHeight =
+  backgroundImage && typeof backgroundImage === 'object' ? (backgroundImage.height ?? undefined) : undefined;
 const buttonHref = resolveLinkHref(button);
 ---
 
@@ -33,6 +37,8 @@ const buttonHref = resolveLinkHref(button);
       <img
         src={backgroundImageUrl}
         alt={backgroundImageAlt}
+        width={backgroundImageWidth}
+        height={backgroundImageHeight}
         loading="lazy"
         class="absolute inset-0 -z-20 h-full w-full object-cover"
       />

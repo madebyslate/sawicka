@@ -48,7 +48,12 @@ const siteSettings = await getSiteSettings();
     description={category.description}
   />
 
-  <BlogGrid posts={posts} postsPerPage={siteSettings.blog?.postsPerPage} />
+  <BlogGrid
+    posts={posts}
+    postsPerPage={siteSettings.blog?.postsPerPage}
+    readArticleLabel={siteSettings.interfaceText?.blog?.readArticleLabel}
+    loadMoreLabel={siteSettings.interfaceText?.blog?.loadMoreLabel}
+  />
 
   {ctaBlock && <CTA {...ctaBlock} />}
 

@@ -12,6 +12,6 @@ const tones = {
 } as const;
 ---
 
-<p class:list={['font-label text-tagline font-medium uppercase', tones[tone], className]}>
+<p class:list={['mt-3.5 font-label text-tagline font-medium uppercase', tones[tone], className]}>
   <span aria-hidden="true">[ </span><slot /><span aria-hidden="true"> ]</span>
 </p>

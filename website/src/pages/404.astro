@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/sections/Footer/Footer.astro';
+import NotFoundHero from '../components/sections/NotFoundHero/NotFoundHero.astro';
+import { getSiteSettings } from '../lib/payload/site-settings';
+import { resolveLinkHref } from '../lib/payload/link';
+
+const siteSettings = await getSiteSettings();
+const notFound = siteSettings.notFound;
+const buttonHref = notFound?.button ? resolveLinkHref(notFound.button) : undefined;
+const badgeLabels = notFound?.badges?.map((badge) => badge.label).filter((label): label is string => !!label);
+---
+
+<Layout title={`Błąd 404 | ${siteSettings.siteName}`} description="Nie możemy znaleźć strony, której szukasz.">
+  <NotFoundHero
+    tagline={notFound?.tagline || undefined}
+    heading={notFound?.heading || undefined}
+    description={notFound?.description || undefined}
+    buttonLabel={notFound?.button?.label || undefined}
+    buttonHref={buttonHref}
+    badgeLabels={badgeLabels?.length ? badgeLabels : undefined}
+  />
+
+  <Footer slot="footer" />
+</Layout>

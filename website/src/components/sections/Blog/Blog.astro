@@ -13,9 +13,10 @@ interface Props {
   description?: string | null;
   postsMode?: 'latest' | 'manual' | null;
   manualPosts?: (number | Post)[] | null;
+  readArticleLabel?: string | null;
 }
 
-const { tagline, heading, description, postsMode, manualPosts } = Astro.props;
+const { tagline, heading, description, postsMode, manualPosts, readArticleLabel } = Astro.props;
 
 const posts: Post[] =
   postsMode === 'manual'
@@ -37,7 +38,9 @@ const posts: Post[] =
       </div>
 
       <div class="grid w-full grid-cols-1 gap-4 lg:grid-cols-3">
-        {posts.map((post, index) => <BlogCard post={post} revealDelay={150 + index * 100} />)}
+        {posts.map((post, index) => (
+          <BlogCard post={post} revealDelay={150 + index * 100} readArticleLabel={readArticleLabel} />
+        ))}
       </div>
     </div>
   </Container>

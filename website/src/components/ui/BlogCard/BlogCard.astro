@@ -9,17 +9,20 @@ interface Props {
   post: Post;
   class?: string;
   revealDelay?: number;
+  readArticleLabel?: string | null;
   [dataAttribute: `data-${string}`]: unknown;
 }
 
-const { post, class: className, revealDelay, ...rest } = Astro.props;
+const { post, class: className, revealDelay, readArticleLabel, ...rest } = Astro.props;
 
 const categoryName = typeof post.category === 'object' ? post.category?.name : undefined;
 const postHref = getPostHref(post);
 const imageUrl = resolveMediaUrl(post.featuredImage);
 const imageAlt = typeof post.featuredImage === 'object' ? post.featuredImage.alt : '';
+const imageWidth = typeof post.featuredImage === 'object' ? (post.featuredImage.width ?? undefined) : undefined;
+const imageHeight = typeof post.featuredImage === 'object' ? (post.featuredImage.height ?? undefined) : undefined;
 const formattedDate = post.publishedDate
-  ? new Date(post.publishedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  ? new Date(post.publishedDate).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })
   : '';
 ---
 
@@ -42,6 +45,8 @@ const formattedDate = post.publishedDate
         <img
           src={imageUrl}
           alt={imageAlt}
+          width={imageWidth}
+          height={imageHeight}
           loading="lazy"
           class="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-105"
         />
@@ -114,9 +119,8 @@ const formattedDate = post.publishedDate
 
       {post.excerpt && <p class="mt-6 line-clamp-2 text-body text-navy/80">{post.excerpt}</p>}
     </div>
-    {/* TODO: [category]/[slug] jeszcze nie istnieje — sama strona artykułu to osobne, jeszcze nie zrobione zadanie */}
     <Button variant="accent" href={postHref} class="relative z-10 self-start">
-      Read Article
+      {readArticleLabel || 'Czytaj artykuł'}
     </Button>
   </div>
 </article>

@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { afterChangeGlobal } from '../hooks/triggerDeployHook'
 import { authenticated } from '../access/authenticated'
+import { linkFields } from '../fields/linkFields'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -73,6 +74,111 @@ export const SiteSettings: GlobalConfig = {
                 description:
                   'Ile wpisów pokazuje się od razu na /blog i na stronach kategorii, zanim trzeba kliknąć "Load More".',
               },
+            },
+          ],
+        },
+        {
+          name: 'interfaceText',
+          label: 'Teksty interfejsu',
+          admin: {
+            description:
+              'Krótkie napisy "na sztywno" w kodzie strony (etykiety przycisków, nagłówki pomocnicze) — nie należą do żadnego konkretnego bloku, więc zebrane są tutaj w jednym miejscu do tłumaczenia/edycji.',
+          },
+          fields: [
+            {
+              name: 'hero',
+              type: 'group',
+              label: 'Sekcja Hero (strona główna)',
+              fields: [
+                { name: 'scrollDownLabel', type: 'text', label: 'Link "przewiń w dół" (desktop)' },
+              ],
+            },
+            {
+              name: 'services',
+              type: 'group',
+              label: 'Sekcja Usługi',
+              fields: [
+                { name: 'areasOfSupportLabel', type: 'text', label: 'Nagłówek listy "Obszary wsparcia" w rozwiniętej usłudze' },
+              ],
+            },
+            {
+              name: 'blog',
+              type: 'group',
+              label: 'Blog — karty i listing',
+              fields: [
+                { name: 'readArticleLabel', type: 'text', label: 'Przycisk na karcie wpisu ("Czytaj artykuł")' },
+                { name: 'loadMoreLabel', type: 'text', label: 'Przycisk "pokaż więcej wpisów" na listingu' },
+              ],
+            },
+            {
+              name: 'post',
+              type: 'group',
+              label: 'Strona pojedynczego wpisu',
+              fields: [
+                { name: 'faqHeading', type: 'text', label: 'Nagłówek nad FAQ pod artykułem' },
+                { name: 'backButtonLabel', type: 'text', label: 'Przycisk powrotu do kategorii' },
+                { name: 'tableOfContentsHeading', type: 'text', label: 'Nagłówek "Spis treści" w bocznym panelu' },
+              ],
+            },
+            {
+              name: 'breadcrumbHomeLabel',
+              type: 'text',
+              label: 'Etykieta "Strona główna" w danych strukturalnych (breadcrumb JSON-LD)',
+            },
+          ],
+        },
+        {
+          name: 'notFound',
+          label: '404',
+          fields: [
+            {
+              name: 'tagline',
+              type: 'text',
+              label: 'Plakietka nad nagłówkiem',
+              admin: {
+                description: 'Np. "Błąd 404".',
+              },
+            },
+            {
+              name: 'heading',
+              type: 'text',
+              label: 'Nagłówek',
+            },
+            {
+              name: 'description',
+              type: 'textarea',
+              label: 'Opis',
+            },
+            {
+              name: 'button',
+              type: 'group',
+              label: 'Przycisk',
+              // required:false na 'label' — SiteSettings to istniejący global (już ma
+              // wiersz w bazie), więc dodanie kolumny NOT NULL bez wartości domyślnej
+              // blokuje `push` schematu (Postgres/drizzle prosi o interaktywne
+              // potwierdzenie, którego nie ma kto udzielić w kontenerze).
+              fields: linkFields().map((field) =>
+                'name' in field && field.name === 'label' ? { ...field, required: false } : field,
+              ),
+            },
+            {
+              name: 'badges',
+              type: 'array',
+              label: 'Dymki w tle (dekoracyjne)',
+              labels: {
+                singular: 'Dymek',
+                plural: 'Dymki',
+              },
+              minRows: 3,
+              maxRows: 3,
+              admin: {
+                description:
+                  'Zawsze dokładnie 3 — ich pozycje na tle sekcji są ustalone na sztywno w kodzie, edytowalny jest tylko tekst.',
+                components: {
+                  RowLabel: '/fields/RowLabel#RowLabel',
+                },
+              },
+              fields: [{ name: 'label', type: 'text', required: true, label: 'Tekst' }],
             },
           ],
         },

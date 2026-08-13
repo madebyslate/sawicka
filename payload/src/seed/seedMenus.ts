@@ -6,11 +6,11 @@ function link(label: string, url: string) {
 }
 
 const sectionLinks = () => [
-  link('Services', '/#services'),
-  link('About', '/#about'),
-  link('How We Work', '/#how-we-work'),
+  link('Usługi', '/#uslugi'),
+  link('O mnie', '/#o-mnie'),
+  link('Jak pracujemy', '/#jak-pracujemy'),
   link('Blog', '/blog'),
-  link('Contact', '/#kontakt'),
+  link('Kontakt', '/#kontakt'),
 ]
 
 const menus = [
@@ -25,9 +25,9 @@ const menus = [
   {
     name: 'Services',
     items: [
-      link('Accounting', '/#services'),
-      link('HR & Payroll', '/#services'),
-      link('Business Advisory & Company Setup', '/#services'),
+      link('Księgowość', '/#services'),
+      link('Kadry i płace', '/#services'),
+      link('Doradztwo biznesowe i zakładanie firm', '/#services'),
     ],
   },
   {
@@ -36,7 +36,7 @@ const menus = [
   },
   {
     name: 'Footer Links',
-    items: [link('Privacy Policy', '/privacy-policy'), link('Terms & Conditions', '/terms-and-conditions')],
+    items: [link('Polityka prywatności', '/privacy-policy'), link('Regulamin', '/terms-and-conditions')],
   },
 ] as const
 
@@ -90,7 +90,7 @@ async function seed() {
   }
 
   if (!header.cta?.label) {
-    headerData.cta = { label: 'Book a Call', type: 'custom', url: '#' }
+    headerData.cta = { label: 'Umów rozmowę', type: 'custom', url: '#' }
   } else {
     console.log('↷ Header.cta już w aktualnym kształcie — pomijam')
   }
@@ -107,8 +107,8 @@ async function seed() {
       slug: 'footer',
       data: {
         linkColumns: [
-          { title: 'Quick Links', menu: idsByName['Quick Links'] },
-          { title: 'Services', menu: idsByName['Services'] },
+          { title: 'Szybkie linki', menu: idsByName['Quick Links'] },
+          { title: 'Usługi', menu: idsByName['Services'] },
           { title: 'Social Media', menu: idsByName['Social Media'] },
         ],
       },
@@ -133,10 +133,10 @@ async function seed() {
       slug: 'footer',
       data: {
         contact: {
-          address: { label: 'Address', value: '4517 Washington Ave.\nManchester, 39495' },
-          phone: { label: 'Phone', value: '(+48) 039 1038 0339' },
+          address: { label: 'Adres', value: 'ul. Kwiatowa 12\n00-001 Warszawa' },
+          phone: { label: 'Telefon', value: '(+48) 039 1038 0339' },
           email: { label: 'Email', value: 'hello@sawickagrzyb.pl' },
-          hours: { label: 'Hours', value: 'Monday - Friday,\n9 AM - 5 PM' },
+          hours: { label: 'Godziny pracy', value: 'Poniedziałek - Piątek,\n9:00 - 17:00' },
         },
       },
     })

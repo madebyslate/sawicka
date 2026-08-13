@@ -5,19 +5,13 @@ interface Props {
   revealDelay?: number;
 }
 
-const {
-  label,
-  class: className,
-  revealDelay = 0,
-} = Astro.props;
+const { label, class: className, revealDelay = 0 } = Astro.props;
+
+const revealStyle = `--reveal-delay: ${revealDelay}ms; --reveal-duration: 800ms; --reveal-distance: 1rem`;
 ---
 
-<div
-  data-reveal
-  style={`--reveal-delay: ${revealDelay}ms; --reveal-duration: 800ms; --reveal-distance: 1rem`}
-  class:list={['absolute hidden h-16 w-fit lg:block', className]}
->
-  <div class="absolute left-0 top-0 inline-flex">
+<div class:list={['absolute hidden h-16 w-fit lg:block', className]}>
+  <div data-reveal style={revealStyle} class="absolute left-0 top-0 inline-flex">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="32"
@@ -36,6 +30,8 @@ const {
   </div>
 
   <span
+    data-reveal
+    style={revealStyle}
     class="absolute left-3 top-8 inline-flex items-center justify-center gap-[10px] whitespace-nowrap rounded-full border-[0.5px] border-[rgba(255,255,255,0.32)] bg-[rgba(255,255,255,0.06)] px-[12px] py-[7px] text-[16px] leading-normal tracking-[-0.64px] text-white shadow-[inset_-4px_-6px_32px_0_rgba(255,255,255,0.02)] backdrop-blur-[6px]"
   >
     {label}

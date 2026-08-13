@@ -32,6 +32,6 @@ const pageDescription = page.metaDescription || siteSettings.tagline || siteSett
   ogImage={page.ogImage}
 >
   <Header slot="header" />
-  {page.content && <RenderBlocks blocks={page.content} />}
+  {page.content && <RenderBlocks blocks={page.content} interfaceText={siteSettings.interfaceText} />}
   <Footer slot="footer" />
 </Layout>

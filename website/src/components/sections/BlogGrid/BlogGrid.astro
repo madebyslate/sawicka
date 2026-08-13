@@ -8,9 +8,11 @@ import BlogCard from '../../ui/BlogCard/BlogCard.astro';
 interface Props {
   posts: Post[];
   postsPerPage?: number | null;
+  readArticleLabel?: string | null;
+  loadMoreLabel?: string | null;
 }
 
-const { posts, postsPerPage } = Astro.props;
+const { posts, postsPerPage, readArticleLabel, loadMoreLabel } = Astro.props;
 
 const INITIAL_VISIBLE = postsPerPage && postsPerPage > 0 ? postsPerPage : 9;
 ---
@@ -26,6 +28,7 @@ const INITIAL_VISIBLE = postsPerPage && postsPerPage > 0 ? postsPerPage : 9;
               data-blog-item
               class={index >= INITIAL_VISIBLE ? 'hidden' : undefined}
               revealDelay={index < INITIAL_VISIBLE ? (index % 3) * 100 : undefined}
+              readArticleLabel={readArticleLabel}
             />
           ))
         }
@@ -34,7 +37,7 @@ const INITIAL_VISIBLE = postsPerPage && postsPerPage > 0 ? postsPerPage : 9;
       {
         posts.length > INITIAL_VISIBLE && (
           <Button type="button" variant="accent" data-load-more data-batch-size={INITIAL_VISIBLE}>
-            Load More
+            {loadMoreLabel || 'Pokaż więcej'}
           </Button>
         )
       }

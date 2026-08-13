@@ -36,6 +36,8 @@ const { tagline, heading, portrait, bio, facts, quote } = Astro.props;
 
 const portraitUrl = resolveMediaUrl(portrait);
 const portraitAlt = portrait && typeof portrait === 'object' ? portrait.alt : '';
+const portraitWidth = portrait && typeof portrait === 'object' ? (portrait.width ?? undefined) : undefined;
+const portraitHeight = portrait && typeof portrait === 'object' ? (portrait.height ?? undefined) : undefined;
 ---
 
 <Section class="bg-cream">
@@ -62,6 +64,8 @@ const portraitAlt = portrait && typeof portrait === 'object' ? portrait.alt : ''
             <img
               src={portraitUrl}
               alt={portraitAlt}
+              width={portraitWidth}
+              height={portraitHeight}
               loading="lazy"
               class="h-134.5 w-full rounded-card object-cover lg:w-135.25 lg:shrink-0"
             />
@@ -83,7 +87,20 @@ const portraitAlt = portrait && typeof portrait === 'object' ? portrait.alt : ''
                         {(fact.images ?? []).map((item) => {
                           const imageUrl = resolveMediaUrl(item.image);
                           const imageAlt = typeof item.image === 'object' ? item.image.alt : '';
-                          return imageUrl && <img src={imageUrl} alt={imageAlt} loading="lazy" class="h-15 w-auto" />;
+                          const imageWidth = typeof item.image === 'object' ? (item.image.width ?? undefined) : undefined;
+                          const imageHeight = typeof item.image === 'object' ? (item.image.height ?? undefined) : undefined;
+                          return (
+                            imageUrl && (
+                              <img
+                                src={imageUrl}
+                                alt={imageAlt}
+                                width={imageWidth}
+                                height={imageHeight}
+                                loading="lazy"
+                                class="h-15 w-auto"
+                              />
+                            )
+                          );
                         })}
                       </div>
                     ) : (

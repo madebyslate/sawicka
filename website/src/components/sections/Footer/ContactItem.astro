@@ -11,7 +11,7 @@ const { label, class: className } = Astro.props;
 
 <div class:list={['flex flex-col items-start gap-2', className]}>
   <FooterLabel>{label}</FooterLabel>
-  <p class="text-2xl leading-[1.4] tracking-[-0.04em] text-white">
+  <p class="text-lg leading-[1.4] tracking-[-0.04em] text-white sm:text-xl lg:text-2xl">
     <slot />
   </p>
 </div>

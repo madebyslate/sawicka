@@ -2,7 +2,6 @@
 import Container from '../../ui/Container/Container.astro';
 import Heading from '../../ui/Heading/Heading.astro';
 import GridLines from '../../ui/GridLines/GridLines.astro';
-import noiseTexture from '../../../assets/sections/hero/noise-texture.png';
 import { noiseBackgroundImage } from '../../../lib/noiseBackground';
 
 interface Props {
@@ -27,7 +26,7 @@ const { heading, category, date, readTime } = Astro.props;
 
   <div
     class="pointer-events-none absolute inset-0 -z-15 opacity-[0.32] mix-blend-soft-light"
-    style={`background-image: url(${noiseTexture.src}); background-repeat: repeat;`}
+    style={`background-image: ${noiseBackgroundImage}; background-repeat: repeat;`}
   >
   </div>
 

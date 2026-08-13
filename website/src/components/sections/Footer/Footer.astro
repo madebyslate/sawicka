@@ -16,11 +16,7 @@ const legalLinks = getMenuItems(footer.legalMenu);
 const addressLines = contact?.address?.value?.split('\n') ?? [];
 const hoursLines = contact?.hours?.value?.split('\n') ?? [];
 
-const columnWidthClasses = [
-  'footer-row:w-28 footer-row:whitespace-nowrap',
-  'footer-row:w-40',
-  'footer-row:w-27 footer-row:whitespace-nowrap',
-];
+const columnWidthClass = 'footer-row:flex-1 footer-row:min-w-0';
 ---
 
 <footer class="bg-navy py-16 sm:py-20 lg:pt-20 lg:pb-6">
@@ -48,16 +44,6 @@ const columnWidthClasses = [
           </ContactItem>
         </div>
 
-        {/*
-          Próg 1239px = 568 (lewa kolumna) + 32+1+32 (divider przy MINIMALNYCH
-          marginesach) + 542 (prawa kolumna) + 64 (padding Containera, lg:px-8
-          obowiązuje aż do desktop:=1440) — poniżej tego nawet przy minimalnych
-          marginesach treść się nie mieści, więc dopiero tam ma sens
-          rozpoczynać układ side-by-side. Marginesy skalują się płynnie przez
-          clamp() od 32px (przy 1239px) do docelowych 89px/119px (przy 1440px,
-          patrz --breakpoint-desktop w global.css) — stąd surowy `style`
-          zamiast klas Tailwind (ten sam wzorzec co radial-gradient w Hero.astro).
-        */}
         <div
           class="hidden w-px shrink-0 self-stretch bg-white/12 footer-row:block"
           style="margin-left: clamp(32px, 28.36vw - 319.4px, 89px); margin-right: clamp(32px, 43.28vw - 504.28px, 119px);"
@@ -65,11 +51,11 @@ const columnWidthClasses = [
 
         <div class="flex flex-wrap gap-16 sm:gap-20 footer-row:flex-nowrap footer-row:gap-20.25">
           {
-            linkColumns.map((column, i) => (
+            linkColumns.map((column) => (
               <FooterLinkColumn
                 label={column.title}
                 links={getMenuItems(column.menu)}
-                class={columnWidthClasses[i]}
+                class={columnWidthClass}
               />
             ))
           }

@@ -9,27 +9,27 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 const testimonials = [
   {
     quote:
-      'Sawicka Grzyb helped us understand our cash flow and made tax season far less stressful. Their response time is outstanding.',
+      'Sawicka Grzyb pomogła nam zrozumieć nasze przepływy pieniężne i sprawiła, że okres rozliczeń podatkowych stał się dużo mniej stresujący. Czas reakcji jest znakomity.',
     author: 'Anna Kowalska',
-    company: 'Owner, Nowak Construction',
+    company: 'Właścicielka, Nowak Construction',
     rating: 5,
     image: 'client-story-photo.png',
     imageAlt: 'Anna Kowalska',
   },
   {
     quote:
-      'The clarity, timeliness, and friendly service made a real difference. I always know my books are in good hands.',
+      'Przejrzystość, terminowość i miła obsługa naprawdę zrobiły różnicę. Zawsze wiem, że moje księgi są w dobrych rękach.',
     author: 'Paweł Nowak',
-    company: 'CEO, Pure Systems',
+    company: 'Prezes, Pure Systems',
     rating: 5,
     image: 'client-story-photo.png',
     imageAlt: 'Paweł Nowak',
   },
   {
     quote:
-      'They explained everything in a way that was easy to understand and saved us time on weekly bookkeeping tasks.',
+      'Wszystko wytłumaczyli w sposób łatwy do zrozumienia i zaoszczędzili nam czasu na cotygodniowej księgowości.',
     author: 'Magda Zielińska',
-    company: 'Founder, Zielińska Studio',
+    company: 'Założycielka, Zielińska Studio',
     rating: 5,
     image: 'client-story-photo.png',
     imageAlt: 'Magda Zielińska',
@@ -113,10 +113,10 @@ async function seed() {
   if (!hasTestimonialsBlock) {
     const testimonialsBlock = {
       blockType: 'testimonials' as const,
-      tagline: 'Testimonials',
-      heading: 'Client experiences that speak for the service.',
+      tagline: 'Opinie',
+      heading: 'Doświadczenia klientów, które mówią same za siebie.',
       description:
-        'These reviews come from real business owners who rely on clear accounting support and responsive service.',
+        'Te opinie pochodzą od prawdziwych przedsiębiorców, którzy polegają na jasnym wsparciu księgowym i szybkiej obsłudze.',
       testimonialsMode: 'latest' as const,
     }
 

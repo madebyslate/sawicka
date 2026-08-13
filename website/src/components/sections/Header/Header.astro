@@ -13,16 +13,28 @@ const navLinks = getMenuItems(header.mainMenu);
 const ctaHref = resolveLinkHref(header.cta);
 const logoUrl = resolveMediaUrl(header.logo);
 const logoAlt = header.logo && typeof header.logo === 'object' ? header.logo.alt : 'Sawicka Grzyb';
+const logoWidth = header.logo && typeof header.logo === 'object' ? (header.logo.width ?? 96) : 96;
+const logoHeight = header.logo && typeof header.logo === 'object' ? (header.logo.height ?? 52) : 52;
 const logoHref = header.logoLink || '/';
 ---
 
-<header class="absolute inset-x-0 top-0 z-20 has-[details[open]]:fixed has-[details[open]]:bg-navy">
+<header
+  data-site-header
+  class="header-slide-in group fixed inset-x-0 top-0 z-20 border-b border-transparent bg-navy/0 backdrop-blur-none shadow-[0_16px_40px_rgba(0,0,0,0)] transition-[background-color,backdrop-filter,border-color,box-shadow,translate] duration-450 ease-[cubic-bezier(0.2,0.7,0.2,1)] data-scrolled:border-white/8 data-scrolled:bg-navy/90 data-scrolled:backdrop-blur-[14px] data-scrolled:shadow-[0_16px_40px_rgba(0,0,0,0.32)] data-hidden:-translate-y-full has-[details[open]]:translate-y-0 has-[details[open]]:bg-navy"
+>
   <Container>
-    <div class="flex items-center justify-between py-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+    <div class="flex items-center justify-between py-6 transition-[padding] duration-300 group-data-scrolled:py-2.5 lg:grid lg:grid-cols-[1fr_auto_1fr]">
       <a href={logoHref} class="h-13 w-24 shrink-0">
         {
           logoUrl ? (
-            <img src={logoUrl} alt={logoAlt} loading="eager" class="h-13 w-24 object-contain" />
+            <img
+              src={logoUrl}
+              alt={logoAlt}
+              width={logoWidth}
+              height={logoHeight}
+              loading="eager"
+              class="h-13 w-24 object-contain"
+            />
           ) : (
             <Image src={defaultLogo} alt={logoAlt} width={96} height={52} loading="eager" class="h-13 w-24 object-contain" />
           )
@@ -46,7 +58,7 @@ const logoHref = header.logoLink || '/';
           </Button>
         </div>
 
-        <details class="group ml-auto lg:hidden">
+        <details data-mobile-menu-trigger class="group ml-auto lg:hidden">
           <summary
             class="flex size-12 cursor-pointer list-none items-center justify-center rounded-full border border-white text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white [&::-webkit-details-marker]:hidden"
           >
@@ -72,58 +84,105 @@ const logoHref = header.logoLink || '/';
               <path d="M5 5l10 10M15 5L5 15" stroke="#fff" stroke-width="1.5" stroke-linecap="round" />
             </svg>
           </summary>
-
-          <nav
-            data-mobile-nav
-            class="fixed inset-x-0 top-25 bottom-0 z-20 flex flex-col overflow-y-auto bg-navy px-4 pb-8"
-          >
-            <ul class="flex flex-col border-t border-white/15">
-              {
-                navLinks.map((link) => (
-                  <li class="border-b border-white/15">
-                    <a
-                      href={resolveLinkHref(link)}
-                      class="flex items-center justify-between py-6 text-[20px] font-medium text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                    >
-                      <span>{link.label}</span>
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path
-                          d="M6 3l5 5-5 5"
-                          stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </a>
-                  </li>
-                ))
-              }
-            </ul>
-
-            <Button variant="primary" size="sm" href={ctaHref} class="mt-auto w-full justify-center">
-              {header.cta?.label}
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path
-                  d="M6 3l5 5-5 5"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </Button>
-          </nav>
         </details>
       </div>
     </div>
   </Container>
 </header>
 
+<nav
+  data-mobile-nav
+  class="fixed inset-x-0 top-25 bottom-0 z-20 hidden flex-col overflow-y-auto bg-navy px-4 pb-8 transition-[top] duration-300 data-open:flex data-scrolled:top-18"
+>
+  <ul class="flex flex-col border-t border-white/15">
+    {
+      navLinks.map((link) => (
+        <li class="border-b border-white/15">
+          <a
+            href={resolveLinkHref(link)}
+            class="flex items-center justify-between py-6 text-[20px] font-medium text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            <span>{link.label}</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M6 3l5 5-5 5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <Button variant="primary" size="sm" href={ctaHref} class="mt-auto w-full justify-center">
+    {header.cta?.label}
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </Button>
+</nav>
+
 <script>
-  document.querySelectorAll('[data-mobile-nav] a').forEach((link) => {
-    link.addEventListener('click', () => {
-      link.closest('details')?.removeAttribute('open');
+  const menuTrigger = document.querySelector('[data-mobile-menu-trigger]');
+  const mobileNav = document.querySelector('[data-mobile-nav]');
+
+  if (menuTrigger instanceof HTMLDetailsElement && mobileNav) {
+    menuTrigger.addEventListener('toggle', () => {
+      mobileNav.toggleAttribute('data-open', menuTrigger.open);
     });
-  });
+
+    mobileNav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        menuTrigger.open = false;
+      });
+    });
+  }
+
+  const header = document.querySelector('[data-site-header]');
+
+  if (header) {
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    // Dwa OSOBNE progi. Tło/border/cień ("sticky look") pojawia się od razu,
+    // przy pierwszym drgnięciu scrolla — chowanie headera to zupełnie inna,
+    // dużo rzadsza decyzja i ma swój własny, wyższy próg.
+    const SCROLLED_THRESHOLD = 8;
+    const HIDE_THRESHOLD = 100;
+
+    const update = () => {
+      const y = window.scrollY;
+      const scrolled = y > SCROLLED_THRESHOLD;
+      const scrollingDown = y > lastY;
+      const menuOpen = menuTrigger instanceof HTMLDetailsElement && menuTrigger.open;
+
+      header.toggleAttribute('data-scrolled', scrolled);
+      mobileNav?.toggleAttribute('data-scrolled', scrolled);
+      // Chowamy tylko gdy przewinięte za HIDE_THRESHOLD i aktywnie scrollujemy
+      // w dół; wraca przy scrollu w górę z dowolnego miejsca. Nigdy nie
+      // chowamy, gdy menu mobilne jest otwarte — inaczej user zgubiłby
+      // przycisk zamykający.
+      header.toggleAttribute('data-hidden', y > HIDE_THRESHOLD && scrollingDown && !menuOpen);
+
+      lastY = y;
+      ticking = false;
+    };
+
+    update();
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(update);
+          ticking = true;
+        }
+      },
+      { passive: true },
+    );
+  }
 </script>

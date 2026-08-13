@@ -59,32 +59,32 @@ async function seed() {
 
   const onboardingProcessBlock = {
     blockType: 'onboardingProcess' as const,
-    tagline: 'Onboarding Process',
-    heading: 'A Smooth Transition From Day One.',
+    tagline: 'Proces wdrożenia',
+    heading: 'Płynne przejście od pierwszego dnia.',
     description:
-      "Changing accountants shouldn't be stressful. I handle the transition so you can stay focused on running your business.",
+      'Zmiana księgowej nie musi być stresująca. Zajmę się przejściem, dzięki czemu Ty możesz skupić się na prowadzeniu firmy.',
     image: mediaId,
     steps: [
       {
-        step: 'Step 1',
-        title: 'Book a Free Consultation',
-        description: "Let's discuss your business, current situation, and what you need.",
+        step: 'Krok 1',
+        title: 'Umów bezpłatną konsultację',
+        description: 'Porozmawiajmy o Twojej firmie, obecnej sytuacji i Twoich potrzebach.',
       },
       {
-        step: 'Step 2',
-        title: 'We Handle the Transfer',
+        step: 'Krok 2',
+        title: 'Zajmę się przeniesieniem dokumentów',
         description:
-          "I'll coordinate the transfer of documents and formalities with your previous accountant whenever possible.",
+          'Skoordynuję przekazanie dokumentów i formalności z poprzednią księgową, gdy tylko to możliwe.',
       },
       {
-        step: 'Step 3',
-        title: 'Simple Onboarding',
-        description: "We'll organize your documents, systems, and communication so everything runs smoothly.",
+        step: 'Krok 3',
+        title: 'Proste wdrożenie',
+        description: 'Uporządkujemy Twoje dokumenty, systemy i komunikację, żeby wszystko działało sprawnie.',
       },
       {
-        step: 'Step 4',
-        title: 'Ongoing Support',
-        description: 'Stay compliant with direct support and clear deadlines.',
+        step: 'Krok 4',
+        title: 'Stałe wsparcie',
+        description: 'Zachowaj zgodność z przepisami dzięki bezpośredniemu wsparciu i jasnym terminom.',
       },
     ],
   }

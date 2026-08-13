@@ -75,7 +75,10 @@ const hasMultiple = testimonials.length > 1;
                 class="flex motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out motion-reduce:transition-none"
               >
                 {testimonials.map((testimonial) => {
-                  const photoUrl = resolveMediaUrl(testimonial.photo as number | Media | null | undefined);
+                  const photo = testimonial.photo as number | Media | null | undefined;
+                  const photoUrl = resolveMediaUrl(photo);
+                  const photoWidth = photo && typeof photo === 'object' ? (photo.width ?? undefined) : undefined;
+                  const photoHeight = photo && typeof photo === 'object' ? (photo.height ?? undefined) : undefined;
 
                   return (
                     <article
@@ -86,6 +89,8 @@ const hasMultiple = testimonials.length > 1;
                         <img
                           src={photoUrl}
                           alt={testimonial.author}
+                          width={photoWidth}
+                          height={photoHeight}
                           loading="lazy"
                           class="h-90 w-full rounded-card object-cover lg:h-112 lg:w-107"
                         />

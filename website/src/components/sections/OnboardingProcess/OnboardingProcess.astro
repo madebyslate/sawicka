@@ -25,9 +25,11 @@ const { tagline, heading, description, image, steps } = Astro.props;
 
 const imageUrl = resolveMediaUrl(image);
 const imageAlt = image && typeof image === 'object' ? image.alt : '';
+const imageWidth = image && typeof image === 'object' ? (image.width ?? undefined) : undefined;
+const imageHeight = image && typeof image === 'object' ? (image.height ?? undefined) : undefined;
 ---
 
-<Section id="how-we-work" class="bg-navy pt-25 pb-30">
+<Section id="jak-pracujemy" class="bg-navy pt-25 pb-30">
   <Container>
     <div class="flex w-full flex-col items-start gap-20">
       <div
@@ -49,6 +51,8 @@ const imageAlt = image && typeof image === 'object' ? image.alt : '';
           <img
             src={imageUrl}
             alt={imageAlt}
+            width={imageWidth}
+            height={imageHeight}
             loading="lazy"
             class="h-114.5 w-full rounded-card object-cover lg:w-135.25 lg:shrink-0"
           />
