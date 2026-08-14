@@ -10,7 +10,7 @@ import { noiseBackgroundImage } from '../../../lib/noiseBackground';
 import noiseTexturePng from '../../../assets/sections/hero/noise-texture.png';
 import heroPerson from '../../../assets/sections/hero/hero-portrait.png';
 import { resolveLinkHref, type LinkLike } from '../../../lib/payload/link';
-import { resolveMediaUrl } from '../../../lib/payload/media';
+import { resolveMediaSize } from '../../../lib/payload/media';
 
 // Tymczasowa flaga do porównania PNG vs SVG-noise — przełącz i odśwież.
 const USE_SVG_NOISE = true;
@@ -47,11 +47,10 @@ const {
   scrollDownLabel,
 } = Astro.props;
 
-const avatarsImageUrl = resolveMediaUrl(avatarsImage);
-const avatarsImageWidth =
-  avatarsImage && typeof avatarsImage === 'object' ? (avatarsImage.width ?? undefined) : undefined;
-const avatarsImageHeight =
-  avatarsImage && typeof avatarsImage === 'object' ? (avatarsImage.height ?? undefined) : undefined;
+const avatarsImageSize = resolveMediaSize(avatarsImage, 'thumbnail');
+const avatarsImageUrl = avatarsImageSize?.url;
+const avatarsImageWidth = avatarsImageSize?.width;
+const avatarsImageHeight = avatarsImageSize?.height;
 const primaryHref = resolveLinkHref(primaryButton);
 const secondaryHref = resolveLinkHref(secondaryButton);
 
@@ -130,7 +129,7 @@ const trustParts =
         {(avatarsImageUrl || trustText) && (
           <div
             data-reveal
-            style="--reveal-delay: 150ms"
+            style="--reveal-delay: 80ms"
             class="flex min-w-0 w-full items-center gap-4"
           >
             {avatarsImageUrl && (
@@ -157,7 +156,7 @@ const trustParts =
           </div>
         )}
 
-        <div data-reveal style="--reveal-delay: 300ms" class="flex min-w-0 w-full flex-col gap-8">
+        <div data-reveal style="--reveal-delay: 0ms" class="flex min-w-0 w-full flex-col gap-8">
           {description && <p class="text-body text-white/80">{description}</p>}
 
           <div class="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">

@@ -5,7 +5,7 @@ import Section from '../../ui/Section/Section.astro';
 import SectionLabel from '../../ui/SectionLabel/SectionLabel.astro';
 import Heading from '../../ui/Heading/Heading.astro';
 import IconFeatureCard from '../../ui/IconFeatureCard/IconFeatureCard.astro';
-import { resolveMediaUrl } from '../../../lib/payload/media';
+import { resolveMediaSize } from '../../../lib/payload/media';
 
 interface Feature {
   iconImage?: number | Media | null;
@@ -23,10 +23,16 @@ interface Props {
 
 const { tagline, heading, description, image, features } = Astro.props;
 
-const imageUrl = resolveMediaUrl(image);
+const imageThumbnail = resolveMediaSize(image, 'thumbnail');
+const imageCard = resolveMediaSize(image, 'card');
+const imageUrl = imageCard?.url;
 const imageAlt = image && typeof image === 'object' ? image.alt : '';
-const imageWidth = image && typeof image === 'object' ? (image.width ?? undefined) : undefined;
-const imageHeight = image && typeof image === 'object' ? (image.height ?? undefined) : undefined;
+const imageWidth = imageCard?.width;
+const imageHeight = imageCard?.height;
+const imageSrcset =
+  imageThumbnail && imageCard && imageThumbnail.url !== imageCard.url
+    ? `${imageThumbnail.url} ${imageThumbnail.width}w, ${imageCard.url} ${imageCard.width}w`
+    : undefined;
 
 const leftColumn = (features ?? []).filter((_, index) => index % 2 === 0);
 const rightColumn = (features ?? []).filter((_, index) => index % 2 === 1);
@@ -67,6 +73,8 @@ const rightColumn = (features ?? []).filter((_, index) => index % 2 === 1);
         {imageUrl && (
           <img
             src={imageUrl}
+            srcset={imageSrcset}
+            sizes="(min-width: 1024px) 429px, 100vw"
             alt={imageAlt}
             width={imageWidth}
             height={imageHeight}

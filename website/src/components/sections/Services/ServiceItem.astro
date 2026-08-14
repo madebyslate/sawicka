@@ -2,7 +2,7 @@
 import type { Media } from '@payload-types';
 import Heading from '../../ui/Heading/Heading.astro';
 import Button from '../../ui/Button/Button.astro';
-import { resolveMediaUrl } from '../../../lib/payload/media';
+import { resolveMediaSize } from '../../../lib/payload/media';
 import { resolveLinkHref, type LinkLike } from '../../../lib/payload/link';
 
 interface Props {
@@ -31,10 +31,16 @@ const {
   areasOfSupportLabel,
 } = Astro.props;
 
-const imageUrl = resolveMediaUrl(image);
+const imageThumbnail = resolveMediaSize(image, 'thumbnail');
+const imageCard = resolveMediaSize(image, 'card');
+const imageUrl = imageCard?.url;
 const imageAlt = image && typeof image === 'object' ? image.alt : title;
-const imageWidth = image && typeof image === 'object' ? (image.width ?? undefined) : undefined;
-const imageHeight = image && typeof image === 'object' ? (image.height ?? undefined) : undefined;
+const imageWidth = imageCard?.width;
+const imageHeight = imageCard?.height;
+const imageSrcset =
+  imageThumbnail && imageCard && imageThumbnail.url !== imageCard.url
+    ? `${imageThumbnail.url} ${imageThumbnail.width}w, ${imageCard.url} ${imageCard.width}w`
+    : undefined;
 const buttonHref = resolveLinkHref(button);
 ---
 
@@ -116,6 +122,8 @@ const buttonHref = resolveLinkHref(button);
       <div class="h-full w-full overflow-hidden rounded-card">
         <img
           src={imageUrl}
+          srcset={imageSrcset}
+          sizes="(min-width: 1024px) 500px, 100vw"
           alt={imageAlt}
           width={imageWidth}
           height={imageHeight}

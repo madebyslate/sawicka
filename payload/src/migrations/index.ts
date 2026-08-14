@@ -3,6 +3,7 @@ import * as migration_20260813_065509 from './20260813_065509';
 import * as migration_20260813_145029_add_interface_text from './20260813_145029_add_interface_text';
 import * as migration_20260813_160413_add_pain_point_feature_icon_images from './20260813_160413_add_pain_point_feature_icon_images';
 import * as migration_20260814_003353_add_post_read_time_hook from './20260814_003353_add_post_read_time_hook';
+import * as migration_20260814_071943_add_media_image_sizes from './20260814_071943_add_media_image_sizes';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20260814_003353_add_post_read_time_hook.up,
     down: migration_20260814_003353_add_post_read_time_hook.down,
-    name: '20260814_003353_add_post_read_time_hook'
+    name: '20260814_003353_add_post_read_time_hook',
+  },
+  {
+    up: migration_20260814_071943_add_media_image_sizes.up,
+    down: migration_20260814_071943_add_media_image_sizes.down,
+    name: '20260814_071943_add_media_image_sizes'
   },
 ];

@@ -5,7 +5,7 @@ import Section from '../../ui/Section/Section.astro';
 import SectionLabel from '../../ui/SectionLabel/SectionLabel.astro';
 import Heading from '../../ui/Heading/Heading.astro';
 import StepItem from './StepItem.astro';
-import { resolveMediaUrl } from '../../../lib/payload/media';
+import { resolveMediaSize } from '../../../lib/payload/media';
 
 interface Step {
   step: string;
@@ -23,10 +23,16 @@ interface Props {
 
 const { tagline, heading, description, image, steps } = Astro.props;
 
-const imageUrl = resolveMediaUrl(image);
+const imageThumbnail = resolveMediaSize(image, 'thumbnail');
+const imageCard = resolveMediaSize(image, 'card');
+const imageUrl = imageCard?.url;
 const imageAlt = image && typeof image === 'object' ? image.alt : '';
-const imageWidth = image && typeof image === 'object' ? (image.width ?? undefined) : undefined;
-const imageHeight = image && typeof image === 'object' ? (image.height ?? undefined) : undefined;
+const imageWidth = imageCard?.width;
+const imageHeight = imageCard?.height;
+const imageSrcset =
+  imageThumbnail && imageCard && imageThumbnail.url !== imageCard.url
+    ? `${imageThumbnail.url} ${imageThumbnail.width}w, ${imageCard.url} ${imageCard.width}w`
+    : undefined;
 ---
 
 <Section id="jak-pracujemy" class="bg-navy pt-25 pb-30">
@@ -50,6 +56,8 @@ const imageHeight = image && typeof image === 'object' ? (image.height ?? undefi
         {imageUrl && (
           <img
             src={imageUrl}
+            srcset={imageSrcset}
+            sizes="(min-width: 1024px) 541px, 100vw"
             alt={imageAlt}
             width={imageWidth}
             height={imageHeight}

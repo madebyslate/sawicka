@@ -24,5 +24,19 @@ export const Media: CollectionConfig = {
   upload: {
     formatOptions: { format: 'webp', options: { quality: 82 } },
     resizeOptions: { width: 1920, withoutEnlargement: true },
+    imageSizes: [
+      {
+        name: 'thumbnail',
+        width: 400,
+        height: undefined,
+        formatOptions: { format: 'webp', options: { quality: 82 } },
+      },
+      {
+        name: 'card',
+        width: 800,
+        height: undefined,
+        formatOptions: { format: 'webp', options: { quality: 82 } },
+      },
+    ],
   },
 }
