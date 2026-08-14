@@ -24,6 +24,7 @@ const seeds = [
   'seedTextPages.ts',
   'seedNotFound.ts',
   'seedInterfaceText.ts',
+  'seedSeoAndOrganization.ts',
   'seedReorderHome.ts',
 ]
 

@@ -1,7 +1,15 @@
-import { getPayload } from 'payload'
+import { getPayload, type Payload } from 'payload'
 import config from '../payload.config'
 import { buildContent, type LexicalBlock } from './lexicalBuilder'
 import { uploadIcon } from './iconAssets'
+
+async function findMediaByAlt(payload: Payload, altCandidates: string[]): Promise<number | undefined> {
+  for (const alt of altCandidates) {
+    const { docs } = await payload.find({ collection: 'media', where: { alt: { equals: alt } }, limit: 1 })
+    if (docs.length > 0) return docs[0].id as number
+  }
+  return undefined
+}
 
 const homeBlockUpdates: Record<string, Record<string, unknown>> = {
   hero: {
@@ -690,6 +698,27 @@ async function sync() {
   ;(homeBlockUpdates.personalRelationship.features as Record<string, unknown>[]).forEach((item, index) => {
     item.iconImage = featureIcons[index]
   })
+
+  const [accountingImageId, hrPayrollImageId, businessAdvisoryImageId] = await Promise.all([
+    findMediaByAlt(payload, ['Księgowość', 'Accounting']),
+    findMediaByAlt(payload, ['Kadry i płace', 'HR & Payroll']),
+    findMediaByAlt(payload, ['Doradztwo biznesowe i zakładanie firm', 'Business Advisory & Company Setup']),
+  ])
+  const serviceImages = [accountingImageId, hrPayrollImageId, businessAdvisoryImageId]
+  ;(homeBlockUpdates.services.services as Record<string, unknown>[]).forEach((item, index) => {
+    if (serviceImages[index]) item.image = serviceImages[index]
+  })
+
+  const [cert1ImageId, cert2ImageId] = await Promise.all([
+    findMediaByAlt(payload, ['Certyfikat zawodowy 1']),
+    findMediaByAlt(payload, ['Certyfikat zawodowy 2']),
+  ])
+  const certFact = (homeBlockUpdates.experienceAndTrust.facts as Record<string, unknown>[]).find(
+    (f) => f.label === 'Certyfikaty i uprawnienia',
+  )
+  if (certFact && (cert1ImageId || cert2ImageId)) {
+    certFact.images = [cert1ImageId, cert2ImageId].filter(Boolean).map((image) => ({ image }))
+  }
 
   const homePage = await payload.find({ collection: 'pages', where: { slug: { equals: '/' } }, limit: 1 })
   const page = homePage.docs[0]

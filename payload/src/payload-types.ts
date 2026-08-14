@@ -580,6 +580,13 @@ export interface Post {
   featuredImage: number | Media;
   author?: string | null;
   publishedDate?: string | null;
+  /**
+   * Liczy czas czytania na podstawie treści artykułu przy każdym zapisie.
+   */
+  autoReadTime?: boolean | null;
+  /**
+   * Wypełniane automatycznie, chyba że odznaczysz "Wylicz automatycznie" powyżej.
+   */
   readTime?: string | null;
   content?: {
     root: {
@@ -1113,6 +1120,7 @@ export interface PostsSelect<T extends boolean = true> {
   featuredImage?: T;
   author?: T;
   publishedDate?: T;
+  autoReadTime?: T;
   readTime?: T;
   content?: T;
   faqs?:

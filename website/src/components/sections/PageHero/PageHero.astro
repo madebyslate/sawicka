@@ -14,7 +14,7 @@ const { tagline, heading, description } = Astro.props;
 ---
 
 <section
-  class="relative isolate flex h-105 items-center overflow-hidden"
+  class="relative isolate flex min-h-62.25 items-end overflow-hidden pt-26.5 pb-13.5 lg:min-h-124.5 lg:pt-40.5 lg:pb-27"
   style="background: linear-gradient(180deg, #030F22 0%, #14243D 100%);"
 >
   <div
@@ -31,7 +31,9 @@ const { tagline, heading, description } = Astro.props;
 
   <GridLines gap={180} offset={60} />
 
-  <Container class="relative flex flex-col items-center gap-4 pt-20 text-center">
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 -z-1 h-45 bg-linear-to-b from-navy/0 to-navy"></div>
+
+  <Container class="relative flex flex-col items-center gap-4 text-center">
     {tagline && (
       <span
         data-reveal

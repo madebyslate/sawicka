@@ -20,10 +20,10 @@ const logoHref = header.logoLink || '/';
 
 <header
   data-site-header
-  class="header-slide-in group fixed inset-x-0 top-0 z-20 border-b border-transparent bg-navy/0 backdrop-blur-none shadow-[0_16px_40px_rgba(0,0,0,0)] transition-[background-color,backdrop-filter,border-color,box-shadow,translate] duration-450 ease-[cubic-bezier(0.2,0.7,0.2,1)] data-scrolled:border-white/8 data-scrolled:bg-navy/90 data-scrolled:backdrop-blur-[14px] data-scrolled:shadow-[0_16px_40px_rgba(0,0,0,0.32)] data-hidden:-translate-y-full has-[details[open]]:translate-y-0 has-[details[open]]:bg-navy"
+  class="header-slide-in group/header fixed inset-x-0 top-0 z-20 border-b border-transparent bg-navy/0 backdrop-blur-none shadow-[0_16px_40px_rgba(0,0,0,0)] transition-[background-color,backdrop-filter,border-color,box-shadow,translate] duration-450 ease-[cubic-bezier(0.2,0.7,0.2,1)] data-scrolled:border-white/8 data-scrolled:bg-navy/90 data-scrolled:backdrop-blur-[14px] data-scrolled:shadow-[0_16px_40px_rgba(0,0,0,0.32)] data-hidden:-translate-y-full has-[details[open]]:translate-y-0 has-[details[open]]:bg-navy"
 >
   <Container>
-    <div class="flex items-center justify-between py-6 transition-[padding] duration-300 group-data-scrolled:py-2.5 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+    <div class="flex items-center justify-between py-6 transition-[padding] duration-300 group-data-scrolled/header:py-2.5 lg:grid lg:grid-cols-[1fr_auto_1fr]">
       <a href={logoHref} class="h-13 w-24 shrink-0">
         {
           logoUrl ? (

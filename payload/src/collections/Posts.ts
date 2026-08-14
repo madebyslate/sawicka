@@ -2,6 +2,7 @@ import type { CollectionConfig, TextField } from 'payload'
 import { slugField } from 'payload'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { afterChangeCollection, afterDeleteCollection } from '../hooks/triggerDeployHook'
+import { computeReadTime } from '../hooks/computeReadTime'
 import { seoFields } from '../fields/seoFields'
 import { authenticated } from '../access/authenticated'
 
@@ -18,6 +19,7 @@ export const Posts: CollectionConfig = {
     delete: authenticated,
   },
   hooks: {
+    beforeChange: [computeReadTime],
     afterChange: [afterChangeCollection],
     afterDelete: [afterDeleteCollection],
   },
@@ -77,9 +79,26 @@ export const Posts: CollectionConfig = {
       },
     },
     {
-      name: 'readTime',
-      type: 'text',
-      label: 'Czas czytania (np. "5 min read")',
+      type: 'row',
+      fields: [
+        {
+          name: 'autoReadTime',
+          type: 'checkbox',
+          label: 'Wylicz automatycznie',
+          defaultValue: true,
+          admin: {
+            description: 'Liczy czas czytania na podstawie treści artykułu przy każdym zapisie.',
+          },
+        },
+        {
+          name: 'readTime',
+          type: 'text',
+          label: 'Czas czytania (np. "5 min czytania")',
+          admin: {
+            description: 'Wypełniane automatycznie, chyba że odznaczysz "Wylicz automatycznie" powyżej.',
+          },
+        },
+      ],
     },
     {
       name: 'content',
